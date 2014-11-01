@@ -46,7 +46,6 @@ public:
     void reset();
     
 private:
-    void init();
     State lastFinalState;
     State lastState; //ruf auf dem aktuellen Zustand die Methode um zum nächsten Zustand zu kommen auf
 };

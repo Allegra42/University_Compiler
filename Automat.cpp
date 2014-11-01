@@ -8,14 +8,11 @@ using namespace std;
  */
 Automat::Automat(){
     states = new States();
-    this->init();
-    
+    lastState = INIT;
+    lastFinalState = INIT;
+
 }
 
-void Automat::init() {
-    lastState = INIT;
-    
-}
 
 /**
  * Methode, die der Scanner aufruft, um zu Erfahren was für ein Typ das Zeichen hat
@@ -28,55 +25,48 @@ State Automat::put(char c) {
     
     // Da mehrere Zeichen hintereinander in den Automaten kommen,
     // ist die Verarbeitung abhängig vom aktuellen Zustand
-    switch(Automat::lastState) {
 
-    case(INIT):
-        {
+
+    if (Automat::lastState == INIT)
+    {
             lastNormal =states->StateINIT(c);
-            break;
-        }
+    }
         
-        case (NUMBER):
-        {
+    if (Automat::lastState == NUMBER)
+    {
             lastNormal = states->StateNUMBER(c);
             lastFinal = lastNormal;
-            break;
-        }
+    }
         
-        case(STRING):
-        {
+    if (Automat::lastState == STRING)
+    {
             lastNormal = states->StateSTRING(c);
             lastFinal = lastNormal;
-            break;
-        }
+    }
         
-        case(OPERATOR):
-        {
+    if (Automat::lastState == OPERATOR)
+    {
             lastNormal = states->StateOPERATOR(c);
-            break;
-        }
+    }
         
-        case (LESSTHAN):
-        {
+    if (Automat::lastState == LESSTHAN)
+    {
             lastNormal = states->StateLESSTHAN(c);
-            break;
-        }
+    }
         
-        case (COLON1):
-        {
+    if (Automat::lastState == COLON1)
+    {
             lastNormal = states->StateCOLON1(c);
             lastFinal = LESSTHAN;
-            break;
-        }
-        
-        case (COLON2):
-        {
-            lastNormal = states->StateCOLON2(c);
-            break;
-        }
-        
     }
+        
+    if (Automat::lastState == COLON2)
+    {
+            lastNormal = states->StateCOLON2(c);
+    }
+        
     
+
     Automat::lastFinalState = lastFinal;
     Automat::lastState = lastNormal;
     
