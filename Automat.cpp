@@ -125,6 +125,9 @@ string Automat::enumToString (State state) {
 	if (state == NUMBER){
 		return "NUMBER";
 	}
+	if (state == STRING){
+		return "STRING";
+	}
 	if (state == OPERATOR){
 		return "OPERATOR";
 	}
@@ -148,7 +151,7 @@ string Automat::enumToString (State state) {
 
 int main() {
 	Automat *automat = new Automat();
-	automat->put('9');
+	automat->put('A');
 	automat->put('+');
 	automat->reset();
 

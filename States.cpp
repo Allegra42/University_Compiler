@@ -17,7 +17,7 @@ State States::StateINIT(char c) {
             return NUMBER;
         }
         
-       else if((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
+       else if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
         {
             return STRING;
         }
