@@ -22,6 +22,7 @@ class States {
 public:
     
     States(){
+    	counterToLastEndState = 0;
         cout << "Object created" << endl ;
     }
     

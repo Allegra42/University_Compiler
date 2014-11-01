@@ -1,5 +1,7 @@
 #include "Automat.h"
 #include "States.h"
+#include <iostream>
+#include <string.h>
 
 using namespace std;
 
@@ -21,7 +23,7 @@ Automat::Automat(){
  */
 State Automat::put(char c) {
     State lastFinal = Automat::lastFinalState;
-    State lastNormal;
+    State lastNormal = Automat::lastState;
     
     // Da mehrere Zeichen hintereinander in den Automaten kommen,
     // ist die Verarbeitung abhängig vom aktuellen Zustand
@@ -69,6 +71,12 @@ State Automat::put(char c) {
 
     Automat::lastFinalState = lastFinal;
     Automat::lastState = lastNormal;
+
+    string stringlastnormal = enumToString(lastState);
+    string stringlastfinal = enumToString(lastFinalState);
+
+    cout << "lastState : " << stringlastnormal << endl;
+    cout << "lastFinalState : " << stringlastfinal << endl;
     
     return lastNormal;
 }
@@ -101,4 +109,48 @@ void Automat::reset() {
     
     Automat::lastState = INIT;   
     Automat::lastFinalState = INIT;
+    cout << "cleared Automat" << endl;
 }
+
+string Automat::enumToString (State state) {
+	if (state == INIT){
+		return "INIT";
+	}
+	if (state == ERROR){
+		return "ERROR";
+	}
+	if (state == EOF){
+		return "EOF";
+	}
+	if (state == NUMBER){
+		return "NUMBER";
+	}
+	if (state == OPERATOR){
+		return "OPERATOR";
+	}
+	if (state == EXCEPTION){
+		return "EXCEPTION";
+	}
+	if (state == LESSTHAN){
+		return "LESSTHAN";
+	}
+	if (state == COLON1){
+		return "COLON1";
+	}
+	if (state == COLON2){
+		return "COLON2";
+	}
+	else{
+		return "NOTHING";
+	}
+}
+
+
+int main() {
+	Automat *automat = new Automat();
+	automat->put('9');
+	automat->put('+');
+	automat->reset();
+
+}
+

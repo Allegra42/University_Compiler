@@ -30,16 +30,17 @@ void Buffer::init(){
 
 }
 
-int main(){
-	Buffer buffer;
-	buffer.init();
-	int i = 0;
-	char a;
-	while (i < 9){
-		a = buffer.nextChar();
-		cout << a << endl;
-		i++;
-	}
-	buffer.resetBy(9);
-	cout << buffer.nextChar();
-}
+//int main(){
+//	Buffer buffer;
+//	buffer.init();
+//	int i = 0;
+//	char a;
+//	while (i < 9){
+//		a = buffer.nextChar();
+//		cout << a << endl;
+//		i++;
+//	}
+//	buffer.resetBy(9);
+//	cout << buffer.nextChar();
+//}
+
