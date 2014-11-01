@@ -151,9 +151,17 @@ string Automat::enumToString (State state) {
 
 int main() {
 	Automat *automat = new Automat();
-	automat->put('A');
+	automat->put('a');
+	automat->put('b');
+	automat->put('9');
 	automat->put('+');
 	automat->reset();
+	automat->put('+');
+	automat->put('a');
+	automat->reset();
+	automat->put(':');
+	automat->put('=');
+	automat->put(0);
 
 }
 
