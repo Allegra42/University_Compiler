@@ -107,7 +107,7 @@ State Automat::put(char c) {
  */
 int Automat::getStepsToLastFinalState() {
     
-	cout << stepsBack << endl;
+	cout << "Schritte zurück zum Ende des letzten Tokens : " << stepsBack << endl;
     return stepsBack;
 }
 
@@ -118,7 +118,7 @@ int Automat::getStepsToLastFinalState() {
  */
 State Automat::getLastFinalState() {
     string lastfinal = enumToString(lastFinalState);
-    cout << lastfinal << endl;
+    cout << "Letztes Token ist vom Typ : " << lastfinal << endl;
     return Automat::lastFinalState;
 }
 
