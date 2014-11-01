@@ -49,6 +49,7 @@ private:
     string enumToString(State state);
     State lastFinalState;
     State lastState; //ruf auf dem aktuellen Zustand die Methode um zum nächsten Zustand zu kommen auf
+    int stepsBack;
 };
 
 #endif

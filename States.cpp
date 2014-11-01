@@ -10,7 +10,7 @@ using namespace std;
  */
 State States::StateINIT(char c) {
     
-    States::counterToLastEndState = 0;
+    States::counterToLastEndState = 1;
         
         if(c >= '0' && c <= '9')
         {
@@ -57,7 +57,7 @@ State States::StateINIT(char c) {
  */
 State States::StateNUMBER(char c) {
 
-    States::counterToLastEndState = 0;
+    States::counterToLastEndState = 1;
             
         if(c >= '0' && c <= '9') 
         {
@@ -78,7 +78,7 @@ State States::StateNUMBER(char c) {
  */
 State States::StateSTRING(char c) {
     
-    States::counterToLastEndState = 0;
+    States::counterToLastEndState = 1;
     
         
         if(((c >= '0') && (c <= '9')) || ((c >= 'a') && (c <= 'z')) || ((c >= 'A') && (c <= 'Z')))
@@ -99,13 +99,13 @@ State States::StateSTRING(char c) {
  */
 State States::StateOPERATOR(char c) {
    
-    States::counterToLastEndState = 0;
+    States::counterToLastEndState = 1;
     return ERROR;
 }
 
 State States::StateLESSTHAN(char c) {
     
-    States::counterToLastEndState = 0;
+    States::counterToLastEndState = 1;
     
         if(c == ':') 
         {
@@ -120,7 +120,7 @@ State States::StateLESSTHAN(char c) {
 
 State States::StateCOLON1(char c) {
     
-    States::counterToLastEndState = 1;
+    States::counterToLastEndState = 2;
     
         if(c == '>')
         {
@@ -135,7 +135,7 @@ State States::StateCOLON1(char c) {
 
 State States::StateCOLON2(char c) {
     
-    States::counterToLastEndState = 1;
+    States::counterToLastEndState = 2;
             
         if(c == '=')
         {

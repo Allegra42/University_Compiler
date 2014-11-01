@@ -12,6 +12,7 @@ Automat::Automat(){
     states = new States();
     lastState = INIT;
     lastFinalState = INIT;
+    stepsBack = 0;
 
 }
 
@@ -22,8 +23,9 @@ Automat::Automat(){
  * @return Zustand in den nach Verarbeitung des Zeichens gewechselt wird
  */
 State Automat::put(char c) {
-    State lastFinal = Automat::lastFinalState;
+
     State lastNormal = Automat::lastState;
+    State lastFinal = lastNormal;
     
     // Da mehrere Zeichen hintereinander in den Automaten kommen,
     // ist die Verarbeitung abhängig vom aktuellen Zustand
@@ -31,40 +33,61 @@ State Automat::put(char c) {
 
     if (Automat::lastState == INIT)
     {
-            lastNormal =states->StateINIT(c);
+            lastNormal = states->StateINIT(c);
+            stepsBack = states->counterToLastEndState;
+
     }
         
     if (Automat::lastState == NUMBER)
     {
             lastNormal = states->StateNUMBER(c);
-            lastFinal = lastNormal;
+            stepsBack = states->counterToLastEndState;
     }
         
     if (Automat::lastState == STRING)
     {
             lastNormal = states->StateSTRING(c);
-            lastFinal = lastNormal;
+            stepsBack = states->counterToLastEndState;
     }
         
     if (Automat::lastState == OPERATOR)
     {
             lastNormal = states->StateOPERATOR(c);
+            stepsBack = states->counterToLastEndState;
     }
         
     if (Automat::lastState == LESSTHAN)
     {
             lastNormal = states->StateLESSTHAN(c);
+            stepsBack = states->counterToLastEndState;
     }
         
     if (Automat::lastState == COLON1)
     {
             lastNormal = states->StateCOLON1(c);
             lastFinal = LESSTHAN;
+            stepsBack = states->counterToLastEndState;
     }
         
     if (Automat::lastState == COLON2)
     {
             lastNormal = states->StateCOLON2(c);
+            stepsBack = states->counterToLastEndState;
+    }
+    if (Automat::lastState == ERROR)
+    {
+    		stepsBack = states->counterToLastEndState;
+    		//lastFinal = lastNormal;
+    }
+    if (Automat::lastState == EOF)
+    {
+    		stepsBack = states->counterToLastEndState;
+    		//lastFinal = lastNormal;
+    }
+    if (Automat::lastState == EXCEPTION)
+    {
+    		stepsBack = states->counterToLastEndState;
+    		//lastFinal = lastNormal;
     }
         
     
@@ -76,7 +99,7 @@ State Automat::put(char c) {
     string stringlastfinal = enumToString(lastFinalState);
 
     cout << "lastState : " << stringlastnormal << endl;
-    cout << "lastFinalState : " << stringlastfinal << endl;
+   // cout << "lastFinalState : " << stringlastfinal << endl;
     
     return lastNormal;
 }
@@ -88,7 +111,8 @@ State Automat::put(char c) {
  */
 int Automat::getStepsToLastFinalState() {
     
-    return states->counterToLastEndState;
+	cout << stepsBack << endl;
+    return stepsBack;
 }
 
 /**
@@ -97,7 +121,8 @@ int Automat::getStepsToLastFinalState() {
  * @return Typ / Zustand des letzten finalen Zustands des Automaten
  */
 State Automat::getLastFinalState() {
-    
+    string lastfinal = enumToString(lastFinalState);
+    cout << lastfinal << endl;
     return Automat::lastFinalState;
 }
 
@@ -155,13 +180,25 @@ int main() {
 	automat->put('b');
 	automat->put('9');
 	automat->put('+');
+	automat->getStepsToLastFinalState();
+	automat->getLastFinalState();
 	automat->reset();
+	cout << endl;
+
 	automat->put('+');
 	automat->put('a');
+	automat->getStepsToLastFinalState();
+	automat->getLastFinalState();
 	automat->reset();
+	cout << endl;
+
 	automat->put(':');
 	automat->put('=');
 	automat->put(0);
+	automat->getStepsToLastFinalState();
+	automat->getLastFinalState();
+	automat->reset();
+	cout << endl;
 
 }
 
