@@ -16,7 +16,6 @@ Automat::Automat(){
 
 }
 
-
 /**
  * Methode, die der Scanner aufruft, um zu Erfahren was für ein Typ das Zeichen hat
  * @param c Eingabezeichen vom Scanner
@@ -74,24 +73,22 @@ State Automat::put(char c) {
             lastNormal = states->StateCOLON2(c);
             stepsBack = states->counterToLastEndState;
     }
+
     if (Automat::lastState == ERROR)
     {
     		stepsBack = states->counterToLastEndState;
-    		//lastFinal = lastNormal;
     }
+
     if (Automat::lastState == EOF)
     {
     		stepsBack = states->counterToLastEndState;
-    		//lastFinal = lastNormal;
     }
+
     if (Automat::lastState == EXCEPTION)
     {
     		stepsBack = states->counterToLastEndState;
-    		//lastFinal = lastNormal;
     }
         
-    
-
     Automat::lastFinalState = lastFinal;
     Automat::lastState = lastNormal;
 
@@ -99,8 +96,7 @@ State Automat::put(char c) {
     string stringlastfinal = enumToString(lastFinalState);
 
     cout << "lastState : " << stringlastnormal << endl;
-   // cout << "lastFinalState : " << stringlastfinal << endl;
-    
+
     return lastNormal;
 }
 
