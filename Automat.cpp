@@ -200,5 +200,13 @@ int main() {
 	automat->reset();
 	cout << endl;
 
+	automat->put('<');
+	automat->put(':');
+	automat->put('=');
+	automat->getStepsToLastFinalState();
+	automat->getLastFinalState();
+	automat->reset();
+	cout << endl;
+
 }
 
