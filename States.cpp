@@ -93,9 +93,9 @@ State States::StateSTRING(char c) {
 }
 
 /**
- * 
- * @param c
- * @return 
+ * Zustand für Operatoren
+ * @param c Eingabezeichen vom Scanner
+ * @return Zustand, der nach der Verarbeitung des Zeichens eingenommen wurde
  */
 State States::StateOPERATOR(char c) {
    
@@ -103,6 +103,12 @@ State States::StateOPERATOR(char c) {
     return ERROR;
 }
 
+
+/**
+ * Zustand für das "kleiner als" Zeichen
+ * @param c Eingabezeichen vom Scanner
+ * @return Zustand, der nach der Verarbeitung des Zeichens eingenommen wurde
+ */
 State States::StateLESSTHAN(char c) {
     
     States::counterToLastEndState = 1;
@@ -118,6 +124,11 @@ State States::StateLESSTHAN(char c) {
         }
 }
 
+/**
+ * Zustand für ":" Fall 1 (<:>)
+ * @param c Eingabezeichen vom Scanner
+ * @return Zustand, der nach der Verarbeitung des Zeichens eingenommen wurde
+ */
 State States::StateCOLON1(char c) {
     
     States::counterToLastEndState = 2;
@@ -133,6 +144,11 @@ State States::StateCOLON1(char c) {
         }
 }
 
+/**
+ * Zustand für ":" Fall 2 (:=)
+ * @param c Eingabezeichen vom Scanner
+ * @return Zustand, der nach der Verarbeitung des Zeichens eingenommen wurde
+ */
 State States::StateCOLON2(char c) {
     
     States::counterToLastEndState = 2;
