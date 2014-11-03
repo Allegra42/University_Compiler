@@ -39,8 +39,10 @@ State States::StateINIT(char c) {
             return COLON2;
         }
 
-        //TODO Exception hier?
-
+        else if (c == 0)
+        {
+        	return EOF;
+        }
 
         else{
             return EXCEPTION;

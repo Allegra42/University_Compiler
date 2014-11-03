@@ -74,14 +74,12 @@ State Automat::put(char c) {
             stepsBack = states->counterToLastEndState;
     }
 
-    //Fall für EOF
-    if (c == 0)
+    if (Automat::lastState == EOF)
     {
-    		lastNormal = EOF;
-    		lastFinal = EOF;
     		stepsBack = states->counterToLastEndState;
     }
 
+    //TODO muss hier raus. Tritt einmal allein auf und muss dann gemeldet werden
     if (Automat::lastState == EXCEPTION)
     {
     		stepsBack = states->counterToLastEndState;
