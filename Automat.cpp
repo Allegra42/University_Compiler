@@ -74,13 +74,11 @@ State Automat::put(char c) {
             stepsBack = states->counterToLastEndState;
     }
 
-    if (Automat::lastState == ERROR)
+    //Fall für EOF
+    if (c == 0)
     {
-    		stepsBack = states->counterToLastEndState;
-    }
-
-    if (Automat::lastState == EOF)
-    {
+    		lastNormal = EOF;
+    		lastFinal = EOF;
     		stepsBack = states->counterToLastEndState;
     }
 
@@ -88,6 +86,12 @@ State Automat::put(char c) {
     {
     		stepsBack = states->counterToLastEndState;
     }
+
+    if (Automat::lastState == ERROR)
+    {
+        		stepsBack = states->counterToLastEndState;
+    }
+
         
     Automat::lastFinalState = lastFinal;
     Automat::lastState = lastNormal;
@@ -199,6 +203,12 @@ int main() {
 	automat->put('<');
 	automat->put(':');
 	automat->put('=');
+	automat->getStepsToLastFinalState();
+	automat->getLastFinalState();
+	automat->reset();
+	cout << endl;
+
+	automat->put('\0');
 	automat->getStepsToLastFinalState();
 	automat->getLastFinalState();
 	automat->reset();
