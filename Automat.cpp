@@ -33,6 +33,12 @@ State Automat::put(char c) {
     if (Automat::lastState == INIT)
     {
             lastNormal = states->StateINIT(c);
+            if (lastNormal == EOF){
+            	lastFinal = EOF;
+            }
+            if (lastNormal == EXCEPTION){
+            	lastFinal = EXCEPTION;
+            }
             stepsBack = states->counterToLastEndState;
 
     }
@@ -64,25 +70,27 @@ State Automat::put(char c) {
     if (Automat::lastState == COLON1)
     {
             lastNormal = states->StateCOLON1(c);
-            lastFinal = LESSTHAN;
-            stepsBack = states->counterToLastEndState;
+            if (lastNormal == OPERATOR){
+            	lastFinal = OPERATOR;
+            	stepsBack = 1;
+            }
+            else {
+            	lastFinal = LESSTHAN;
+            	stepsBack = states->counterToLastEndState;
+            }
     }
         
     if (Automat::lastState == COLON2)
     {
             lastNormal = states->StateCOLON2(c);
-            stepsBack = states->counterToLastEndState;
-    }
-
-    if (Automat::lastState == EOF)
-    {
-    		stepsBack = states->counterToLastEndState;
-    }
-
-    //TODO muss hier raus. Tritt einmal allein auf und muss dann gemeldet werden
-    if (Automat::lastState == EXCEPTION)
-    {
-    		stepsBack = states->counterToLastEndState;
+            if (lastNormal == OPERATOR) {
+            	stepsBack = states->counterToLastEndState;
+            	lastFinal = OPERATOR;
+            }
+            else {
+            	lastFinal = EXCEPTION;
+            	stepsBack = states->counterToLastEndState;
+            }
     }
 
     if (Automat::lastState == ERROR)
@@ -200,7 +208,23 @@ int main() {
 
 	automat->put('<');
 	automat->put(':');
+	automat->put('>');
+	automat->put('j');
+	automat->getStepsToLastFinalState();
+	automat->getLastFinalState();
+	automat->reset();
+	cout << endl;
+
+	automat->put('<');
+	automat->put(':');
 	automat->put('=');
+	automat->getStepsToLastFinalState();
+	automat->getLastFinalState();
+	automat->reset();
+	cout << endl;
+
+	automat->put(':');
+	automat->put('+');
 	automat->getStepsToLastFinalState();
 	automat->getLastFinalState();
 	automat->reset();
@@ -213,4 +237,14 @@ int main() {
 	cout << endl;
 
 }
+
+//TODO
+// - Kommentare vom Typ Comment, darin kann alles sein
+// - NEWLINE, wenn erkannt einfach so zurückgeben
+// - Ich mach ein Zustand Whitespaces der wiederholt wird solange zusammenhängender whitespace auftritt,
+//   kommt was anderes sag ich error wie sonst auch und geb dir wie lang der whitespace war
+// - ALLES mit ifdef /def/ endif deklarieren
+// - <:> wird richtig erkannt, aber im lastfinalstate noch nicht richtig ausgegeben
+
+
 
