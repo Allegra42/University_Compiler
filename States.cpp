@@ -98,7 +98,11 @@ State States::StateSTRING(char c) {
  * @return Zustand, der nach der Verarbeitung des Zeichens eingenommen wurde
  */
 State States::StateOPERATOR(char c) {
-   
+
+	if (c == '/') {
+		States::counterToLastEndState = 1;
+		return COMMENT1;
+	}
     States::counterToLastEndState = 1;
     return ERROR;
 }
@@ -162,6 +166,18 @@ State States::StateCOLON2(char c) {
         {
             return EXCEPTION;
         }
+}
+
+State States::StateCOMMENT1(char c) {
+
+	States::counterToLastEndState = 1;
+
+	if (c != '\n') {
+		return COMMENT1;
+	}
+	else {
+		return ERROR;
+	}
 }
 
 

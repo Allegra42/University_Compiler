@@ -93,6 +93,12 @@ State Automat::put(char c) {
             }
     }
 
+    if (Automat::lastState == COMMENT1) {
+
+    	stepsBack = states->counterToLastEndState;
+    	lastNormal = states->StateCOMMENT1(c);
+    }
+
     if (Automat::lastState == ERROR)
     {
         		stepsBack = states->counterToLastEndState;
@@ -174,6 +180,10 @@ string Automat::enumToString (State state) {
 	if (state == COLON2){
 		return "COLON2";
 	}
+
+	if (state == COMMENT1){
+		return "COMMENT1";
+	}
 	else{
 		return "NOTHING";
 	}
@@ -231,6 +241,18 @@ int main() {
 	cout << endl;
 
 	automat->put('\0');
+	automat->getStepsToLastFinalState();
+	automat->getLastFinalState();
+	automat->reset();
+	cout << endl;
+
+	automat->put('/');
+	automat->put('/');
+	automat->put('a');
+	automat->put('f');
+	automat->put('7');
+	automat->put('+');
+	automat->put('\n');
 	automat->getStepsToLastFinalState();
 	automat->getLastFinalState();
 	automat->reset();

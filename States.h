@@ -37,6 +37,7 @@ public:
     State StateLESSTHAN (char);
     State StateCOLON1 (char);
     State StateCOLON2 (char);
+    State StateCOMMENT1 (char);
     //State StateEOF (char c);
     //State StateERROR (char c);
     //State StateEXCEPTION (char c);
