@@ -262,7 +262,7 @@ int main() {
 
 //TODO
 // - Kommentare vom Typ Comment, darin kann alles sein
-// - NEWLINE, wenn erkannt einfach so zurückgeben
+// - NEWLINE, wenn erkannt einfach so zurückgeben, ALS ZUSTAND wie alles andere auch
 // - Ich mach ein Zustand Whitespaces der wiederholt wird solange zusammenhängender whitespace auftritt,
 //   kommt was anderes sag ich error wie sonst auch und geb dir wie lang der whitespace war
 // - ALLES mit ifdef /def/ endif deklarieren
