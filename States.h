@@ -38,6 +38,9 @@ public:
     State StateCOLON1 (char);
     State StateCOLON2 (char);
     State StateCOMMENT1 (char);
+    State StateCOMMENT2 (char);
+    State StateSLASH (char);
+    State StateCOMMENT21 (char);
     //State StateEOF (char c);
     //State StateERROR (char c);
     //State StateEXCEPTION (char c);

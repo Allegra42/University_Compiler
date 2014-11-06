@@ -93,10 +93,25 @@ State Automat::put(char c) {
             }
     }
 
+    if (Automat::lastState == SLASH) {
+    	stepsBack = states->counterToLastEndState;
+    	lastNormal = states->StateSLASH(c);
+    }
+
     if (Automat::lastState == COMMENT1) {
 
     	stepsBack = states->counterToLastEndState;
     	lastNormal = states->StateCOMMENT1(c);
+    }
+
+    if (Automat::lastState == COMMENT2) {
+    	stepsBack = states->counterToLastEndState;
+    	lastNormal = states->StateCOMMENT2(c);
+    }
+
+    if (Automat::lastState == COMMENT21) {
+    	stepsBack = states->counterToLastEndState;
+    	lastNormal = states->StateCOMMENT21(c);
     }
 
     if (Automat::lastState == ERROR)
@@ -184,6 +199,19 @@ string Automat::enumToString (State state) {
 	if (state == COMMENT1){
 		return "COMMENT1";
 	}
+
+	if (state == COMMENT2){
+		return "COMMNENT2";
+	}
+
+	if (state == COMMENT21){
+		return "COMMENT21";
+	}
+
+	if (state == SLASH){
+		return "SLASH";
+	}
+
 	else{
 		return "NOTHING";
 	}
@@ -258,15 +286,37 @@ int main() {
 	automat->reset();
 	cout << endl;
 
+	automat->put('/');
+	automat->put('*');
+	automat->put('a');
+	automat->put('f');
+	automat->put('7');
+	automat->put('*');
+	automat->put('/');
+	automat->put('u');
+	automat->getStepsToLastFinalState();
+	automat->getLastFinalState();
+	automat->reset();
+	cout << endl;
+
+	automat->put('/');
+	automat->put('*');
+	automat->put('/');
+	automat->put('h');
+	automat->getStepsToLastFinalState();
+	automat->getLastFinalState();
+	automat->reset();
+	cout << endl;
+
 }
 
 //TODO
-// - Kommentare vom Typ Comment, darin kann alles sein
-// - NEWLINE, wenn erkannt einfach so zurückgeben, ALS ZUSTAND wie alles andere auch
+// - Kommentare vom Typ Comment, darin kann alles sein //Commentare überarbeiten
+
 // - Ich mach ein Zustand Whitespaces der wiederholt wird solange zusammenhängender whitespace auftritt,
 //   kommt was anderes sag ich error wie sonst auch und geb dir wie lang der whitespace war
 // - ALLES mit ifdef /def/ endif deklarieren
-// - <:> wird richtig erkannt, aber im lastfinalstate noch nicht richtig ausgegeben
+// -
 
 
 

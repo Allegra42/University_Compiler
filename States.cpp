@@ -22,13 +22,17 @@ State States::StateINIT(char c) {
             return STRING;
         }
         
-        else if(c == '+' || c == '-' || c == '/' || c == '*' || c == '>' || c == '=' ||
+        else if(c == '+' || c == '-' || c == '*' || c == '>' || c == '=' ||
               c == '!' || c == '&' || c == ';' || c == '(' || c == ')' || c == '{' ||
               c == '}' || c == '[' || c == ']')
         {
             return OPERATOR;   
         }
         
+        else if (c == '/') {
+        	return SLASH;
+        }
+
         else if(c == '<')
         {
             return LESSTHAN;
@@ -99,10 +103,6 @@ State States::StateSTRING(char c) {
  */
 State States::StateOPERATOR(char c) {
 
-	if (c == '/') {
-		States::counterToLastEndState = 1;
-		return COMMENT1;
-	}
     States::counterToLastEndState = 1;
     return ERROR;
 }
@@ -167,6 +167,20 @@ State States::StateCOLON2(char c) {
             return EXCEPTION;
         }
 }
+State States::StateSLASH(char c) {
+
+	States::counterToLastEndState = 1;
+
+	if(c == '/') {
+		return COMMENT1; // Kommentare mit //
+	}
+	else if (c == '*') {
+		return COMMENT2; // Kommentare mit /*
+	}
+	else {
+		return OPERATOR;
+	}
+}
 
 State States::StateCOMMENT1(char c) {
 
@@ -180,4 +194,27 @@ State States::StateCOMMENT1(char c) {
 	}
 }
 
+State States::StateCOMMENT2(char c) {
+
+	States::counterToLastEndState = 1;
+
+	if (c == '*') {
+		return COMMENT2;
+	}
+	else {
+		return COMMENT21;
+	}
+}
+
+State States::StateCOMMENT21(char c) {
+
+	States::counterToLastEndState = 1;
+
+	if (c == '/') {
+		return ERROR;
+	}
+	else {
+		return COMMENT2;
+	}
+}
 
