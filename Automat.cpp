@@ -79,6 +79,7 @@ State Automat::put(char c) {
             	stepsBack = states->counterToLastEndState;
             }
     }
+
         
     if (Automat::lastState == COLON2)
     {
@@ -94,6 +95,7 @@ State Automat::put(char c) {
     }
 
     if (Automat::lastState == SLASH) {
+
     	stepsBack = states->counterToLastEndState;
     	lastNormal = states->StateSLASH(c);
     }
@@ -105,13 +107,21 @@ State Automat::put(char c) {
     }
 
     if (Automat::lastState == COMMENT2) {
+
     	stepsBack = states->counterToLastEndState;
     	lastNormal = states->StateCOMMENT2(c);
     }
 
     if (Automat::lastState == COMMENT21) {
+
     	stepsBack = states->counterToLastEndState;
     	lastNormal = states->StateCOMMENT21(c);
+    }
+
+    if (Automat::lastState == WHITESPACE) {
+
+    	stepsBack = states->counterToLastEndState;
+    	lastNormal = states->StateWHITESPACE(c);
     }
 
     if (Automat::lastState == ERROR)
@@ -212,6 +222,10 @@ string Automat::enumToString (State state) {
 		return "SLASH";
 	}
 
+	if (state == WHITESPACE){
+		return "WHITESPACE";
+	}
+
 	else{
 		return "NOTHING";
 	}
@@ -307,6 +321,16 @@ int main() {
 	automat->getLastFinalState();
 	automat->reset();
 	cout << endl;
+
+	automat->put(' ');
+	automat->put(' ');
+	automat->put(9);
+	automat->put('p');
+	automat->getStepsToLastFinalState();
+	automat->getLastFinalState();
+	automat->reset();
+	cout << endl;
+
 
 }
 

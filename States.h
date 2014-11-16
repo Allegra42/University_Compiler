@@ -41,6 +41,7 @@ public:
     State StateCOMMENT2 (char);
     State StateSLASH (char);
     State StateCOMMENT21 (char);
+    State StateWHITESPACE (char);
     //State StateEOF (char c);
     //State StateERROR (char c);
     //State StateEXCEPTION (char c);

@@ -48,6 +48,11 @@ State States::StateINIT(char c) {
         	return EOF;
         }
 
+        else if (c == ' ' || c == 9)
+        {
+        	return WHITESPACE;
+        }
+
         else{
             return EXCEPTION;
         }
@@ -215,6 +220,17 @@ State States::StateCOMMENT21(char c) {
 	}
 	else {
 		return COMMENT2;
+	}
+}
+
+State States::StateWHITESPACE(char c) {
+	States::counterToLastEndState = 1;
+
+	if (c == ' ' || c == 9) {
+		return WHITESPACE;
+	}
+	else {
+		return ERROR;
 	}
 }
 

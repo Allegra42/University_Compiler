@@ -16,7 +16,8 @@ using namespace std;
  * Typdefinition für den Rückgabetyp an den Scanner
  * -> Zustande des Automaten
  */
-enum state {INIT, ERROR, EOF, NUMBER, STRING, OPERATOR, EXCEPTION, LESSTHAN, COLON1, COLON2, COMMENT1,COMMENT2, SLASH, COMMENT21};
+enum state {INIT, ERROR, EOF, NUMBER, STRING, OPERATOR, EXCEPTION, LESSTHAN, COLON1, COLON2,
+	COMMENT1,COMMENT2, SLASH, COMMENT21, WHITESPACE};
 typedef enum state State;
 
 class States;
