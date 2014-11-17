@@ -193,6 +193,11 @@ State States::StateSLASH(char c) {
 	}
 }
 
+/**
+ * Zustand für /"*", also den ersten Stern des Mehrzeilenkommentars.
+ * @param c Eingabezeichen vom Scanner
+ * @return Zustand, der nach der Verarbeitung des Zeichens eingenommen wurde
+ */
 State States::StateSTAR1(char c) {
 
 	States::counterToLastEndState = 1;
@@ -209,6 +214,11 @@ State States::StateSTAR1(char c) {
 	}
 }
 
+/**
+ * Zustand für alles was im Mehrzeilenkommentar geschrieben ist. Auch Sterne dürfen hier wieder auftreten
+ * @param c Eingabezeichen vom Scanner
+ * @return Zustand, der nach der Verarbeitung des Zeichens eingenommen wurde
+ */
 State States::StateCOMM(char c) {
 
 	if (c == '*') {
@@ -223,6 +233,12 @@ State States::StateCOMM(char c) {
 	}
 }
 
+/**
+ * Zustand für den möglichen zweiten Stern des Mehrzeilenkommentars. Kommt nur in den Zustand COMMENT2,
+ * wenn darauf ein "/" folgt. Sonst wird wieder in dem COMM Zustand gewechselt.
+ * @param c Eingabezeichen vom Scanner
+ * @return Zustand, der nach der Verarbeitung des Zeichens eingenommen wurde
+ */
 State States::StateSTAR2(char c) {
 
 	if (c == '/') {
@@ -233,6 +249,11 @@ State States::StateSTAR2(char c) {
 	}
 }
 
+/**
+ * Zustand für das Ende des Mehrzeilenkommentars
+ * @param c Eingabezeichen vom Scanner
+ * @return Zustand, der nach der Verarbeitung des Zeichens eingenommen wurde
+ */
 State States::StateCOMMENT2(char c) {
 
 	States::counterToLastEndState = 1;
