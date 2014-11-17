@@ -23,6 +23,7 @@ public:
     
     States(){
     	counterToLastEndState = 0;
+    	commentLinesCounter = 1;
         cout << "Object created" << endl ;
     }
     
@@ -39,14 +40,17 @@ public:
     State StateCOLON2 (char);
     State StateCOMMENT1 (char);
     State StateCOMMENT2 (char);
+    State StateSTAR1 (char);
+    State StateSTAR2 (char);
+    State StateCOMM (char);
     State StateSLASH (char);
-    State StateCOMMENT21 (char);
     State StateWHITESPACE (char);
     //State StateEOF (char c);
     //State StateERROR (char c);
     //State StateEXCEPTION (char c);
     
     int counterToLastEndState;
+    int commentLinesCounter;
     
 };
 

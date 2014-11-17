@@ -43,12 +43,12 @@ State States::StateINIT(char c) {
             return COLON2;
         }
 
-        else if (c == 0)
+        else if (c == 0) //0 ist in ASCII End of File
         {
         	return EOF;
         }
 
-        else if (c == ' ' || c == 9)
+        else if (c == ' ' || c == 9) // 9 ist in ASCII Tab
         {
         	return WHITESPACE;
         }
@@ -172,6 +172,12 @@ State States::StateCOLON2(char c) {
             return EXCEPTION;
         }
 }
+
+/**
+ * Zustand für "/" -> daraus kann Operator, Zeilenkommentar, oder Mehrzeilenkommentar werden
+ * @param c Eingabezeichen vom Scanner
+ * @return Zustand, der nach der Verarbeitung des Zeichens eingenommen wurde
+ */
 State States::StateSLASH(char c) {
 
 	States::counterToLastEndState = 1;
@@ -180,13 +186,65 @@ State States::StateSLASH(char c) {
 		return COMMENT1; // Kommentare mit //
 	}
 	else if (c == '*') {
-		return COMMENT2; // Kommentare mit /*
+		return STAR1; // Kommentare mit /*
 	}
 	else {
 		return OPERATOR;
 	}
 }
 
+State States::StateSTAR1(char c) {
+
+	States::counterToLastEndState = 1;
+
+	if (c == '*') {
+		return STAR2;
+	}
+	else if (c == '\n') {
+		States::commentLinesCounter++;
+		return COMM;
+	}
+	else {
+		return COMM;
+	}
+}
+
+State States::StateCOMM(char c) {
+
+	if (c == '*') {
+		return STAR2;
+	}
+	else if (c == '\n') {
+		States::commentLinesCounter++;
+		return COMM;
+	}
+	else {
+		return COMM;
+	}
+}
+
+State States::StateSTAR2(char c) {
+
+	if (c == '/') {
+		return COMMENT2;
+	}
+	else {
+		return COMM;
+	}
+}
+
+State States::StateCOMMENT2(char c) {
+
+	States::counterToLastEndState = 1;
+
+	return ERROR;
+}
+
+/**
+ * Zustand für Zeilenkommentar
+ * @param c Eingabezeichen vom Scanner
+ * @return Zustand, der nach der Verarbeitung des Zeichens eingenommen wurde
+ */
 State States::StateCOMMENT1(char c) {
 
 	States::counterToLastEndState = 1;
@@ -199,30 +257,11 @@ State States::StateCOMMENT1(char c) {
 	}
 }
 
-State States::StateCOMMENT2(char c) {
-
-	States::counterToLastEndState = 1;
-
-	if (c == '*') {
-		return COMMENT2;
-	}
-	else {
-		return COMMENT21;
-	}
-}
-
-State States::StateCOMMENT21(char c) {
-
-	States::counterToLastEndState = 1;
-
-	if (c == '/') {
-		return ERROR;
-	}
-	else {
-		return COMMENT2;
-	}
-}
-
+/**
+ * Zustand für Whitespace bzw. Tabulator
+ * @param c Eingabezeichen vom Scanner
+ * @return Zustand, der nach der Verarbeitung des Zeichens eingenommen wurde
+ */
 State States::StateWHITESPACE(char c) {
 	States::counterToLastEndState = 1;
 

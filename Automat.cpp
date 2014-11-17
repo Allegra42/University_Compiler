@@ -13,6 +13,7 @@ Automat::Automat(){
     lastState = INIT;
     lastFinalState = INIT;
     stepsBack = 0;
+    commentLines = 0;
 
 }
 
@@ -106,16 +107,28 @@ State Automat::put(char c) {
     	lastNormal = states->StateCOMMENT1(c);
     }
 
+    if (Automat::lastState == STAR1) {
+
+    	commentLines = states->commentLinesCounter;
+    	stepsBack = states->counterToLastEndState;
+    	lastNormal = states->StateSTAR1(c);
+    }
+
+    if (Automat::lastState == COMM) {
+
+    	commentLines = states->commentLinesCounter;
+    	lastNormal = states->StateCOMM(c);
+    }
+
+    if (Automat::lastState == STAR2) {
+
+    	lastNormal = states->StateSTAR2(c);
+    }
+
     if (Automat::lastState == COMMENT2) {
 
     	stepsBack = states->counterToLastEndState;
     	lastNormal = states->StateCOMMENT2(c);
-    }
-
-    if (Automat::lastState == COMMENT21) {
-
-    	stepsBack = states->counterToLastEndState;
-    	lastNormal = states->StateCOMMENT21(c);
     }
 
     if (Automat::lastState == WHITESPACE) {
@@ -152,6 +165,12 @@ int Automat::getStepsToLastFinalState() {
     return stepsBack;
 }
 
+int Automat::getCommentLines() {
+
+	cout << "Anzahl Zeilen des Mehrzeilenkommentars : " << commentLines << endl;
+	return commentLines;
+}
+
 /**
  * Wird vom Scanner aufgerufen um zu erfahren von welchem Typ das gerade zu 
  * erstellende Token sein soll
@@ -171,6 +190,7 @@ void Automat::reset() {
     
     Automat::lastState = INIT;   
     Automat::lastFinalState = INIT;
+    Automat::commentLines = 0;
     cout << "cleared Automat" << endl;
 }
 
@@ -214,8 +234,16 @@ string Automat::enumToString (State state) {
 		return "COMMNENT2";
 	}
 
-	if (state == COMMENT21){
-		return "COMMENT21";
+	if (state == STAR1){
+		return "STAR1";
+	}
+
+	if (state == COMM){
+		return "COMM";
+	}
+
+	if (state == STAR2){
+		return "STAR2";
 	}
 
 	if (state == SLASH){
@@ -309,15 +337,21 @@ int main() {
 	automat->put('/');
 	automat->put('u');
 	automat->getStepsToLastFinalState();
+	automat->getCommentLines();
 	automat->getLastFinalState();
 	automat->reset();
 	cout << endl;
 
 	automat->put('/');
 	automat->put('*');
+	automat->put('\n');
+	automat->put('a');
+	automat->put('\n');
+	automat->put('*');
 	automat->put('/');
 	automat->put('h');
 	automat->getStepsToLastFinalState();
+	automat->getCommentLines();
 	automat->getLastFinalState();
 	automat->reset();
 	cout << endl;
@@ -335,10 +369,13 @@ int main() {
 }
 
 //TODO
-// - Kommentare vom Typ Comment, darin kann alles sein //Commentare überarbeiten
+// - Mehrzeilen Kommentar : Zustand Slash vorhanden -> Star1 (Anfang des Kommentars)
+//   Danach Zustand in dem allen auftreten darf z.B Comm -> Luca, was tun wir hier bei Zeilenumbrüchen
+//   Wenn wieder ein Stern kommt -> Zustand Star2  : ist nächstes Zeichen Slash?`-> Mehrzeilenkommentar korrekt und fertig
+//   Ist nächstes Zeichen kein Slash? -> wieder in Zustand Comm
 
-// - Ich mach ein Zustand Whitespaces der wiederholt wird solange zusammenhängender whitespace auftritt,
-//   kommt was anderes sag ich error wie sonst auch und geb dir wie lang der whitespace war
+// -
+//
 // - ALLES mit ifdef /def/ endif deklarieren
 // -
 
