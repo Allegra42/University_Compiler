@@ -17,7 +17,7 @@ using namespace std;
  * -> Zustande des Automaten
  */
 enum state {INIT, ERROR, EOF, NUMBER, STRING, OPERATOR, EXCEPTION, LESSTHAN, COLON1, COLON2,
-	COMMENT1,COMMENT2, STAR1, STAR2, COMM, SLASH, WHITESPACE};
+	COMMENT1,COMMENT2, STAR1, STAR2, COMM, SLASH, WHITESPACE, IDENTIFIER, NEWLINE};
 typedef enum state State;
 
 class States;
@@ -42,18 +42,31 @@ public:
    
     int getStepsToLastFinalState();
     
+    string enumToString(State state);
+
     int getCommentLines();
+
+    int getNewLines();
+
+    int getRow();
+
+    int getCol();
+
+    void reject(int colsBack);
 
     State getLastFinalState();
     
     void reset();
     
 private:
-    string enumToString(State state);
+
     State lastFinalState;
     State lastState; //ruf auf dem aktuellen Zustand die Methode um zum nächsten Zustand zu kommen auf
     int stepsBack;
     int commentLines;
+    int newLines;
+    int row; //Reihe
+    int col; //Spalte
 };
 
 #endif

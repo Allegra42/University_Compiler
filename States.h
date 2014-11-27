@@ -1,9 +1,4 @@
-/* 
- * File:   StateInterface.h
- * Author: anna
- *
- * Created on 22. Oktober 2014, 15:39
- */
+
 #ifndef STATES_H
 #define STATES_H
 
@@ -23,8 +18,9 @@ public:
     
     States(){
     	counterToLastEndState = 0;
-    	commentLinesCounter = 1;
-        cout << "Object created" << endl ;
+    	commentLinesCounter = 0;
+    	rowCounter = 0;
+    	cout << "Object created" << endl ;
     }
     
     ~States(){
@@ -45,12 +41,14 @@ public:
     State StateCOMM (char);
     State StateSLASH (char);
     State StateWHITESPACE (char);
+    State StateNEWLINE (char);
     //State StateEOF (char c);
     //State StateERROR (char c);
     //State StateEXCEPTION (char c);
     
     int counterToLastEndState;
     int commentLinesCounter;
+    int rowCounter;
     
 };
 

@@ -14,6 +14,9 @@ Automat::Automat(){
     lastFinalState = INIT;
     stepsBack = 0;
     commentLines = 0;
+    newLines = 0;
+    row = 0;
+    col = 0;
 
 }
 
@@ -23,6 +26,7 @@ Automat::Automat(){
  * @return Zustand in den nach Verarbeitung des Zeichens gewechselt wird
  */
 State Automat::put(char c) {
+	col++;
 
     State lastNormal = Automat::lastState;
     State lastFinal = lastNormal;
@@ -40,7 +44,12 @@ State Automat::put(char c) {
             if (lastNormal == EXCEPTION){
             	lastFinal = EXCEPTION;
             }
+
             stepsBack = states->counterToLastEndState;
+            row += states->rowCounter;
+            if(states->rowCounter == 1) {
+            	col = 0;
+            }
 
     }
         
@@ -48,24 +57,40 @@ State Automat::put(char c) {
     {
             lastNormal = states->StateNUMBER(c);
             stepsBack = states->counterToLastEndState;
+            row += states->rowCounter;
+            if(states->rowCounter == 1) {
+            	col = 0;
+            }
     }
         
     if (Automat::lastState == STRING)
     {
             lastNormal = states->StateSTRING(c);
             stepsBack = states->counterToLastEndState;
+            row += states->rowCounter;
+            if(states->rowCounter == 1) {
+                        	col = 0;
+                        }
     }
         
     if (Automat::lastState == OPERATOR)
     {
             lastNormal = states->StateOPERATOR(c);
             stepsBack = states->counterToLastEndState;
+            row += states->rowCounter;
+            if(states->rowCounter == 1) {
+                        	col = 0;
+                        }
     }
         
     if (Automat::lastState == LESSTHAN)
     {
             lastNormal = states->StateLESSTHAN(c);
             stepsBack = states->counterToLastEndState;
+            row += states->rowCounter;
+            if(states->rowCounter == 1) {
+                        	col = 0;
+                        }
     }
         
     if (Automat::lastState == COLON1)
@@ -79,6 +104,10 @@ State Automat::put(char c) {
             	lastFinal = LESSTHAN;
             	stepsBack = states->counterToLastEndState;
             }
+            row += states->rowCounter;
+            if(states->rowCounter == 1) {
+                        	col = 0;
+                        }
     }
 
         
@@ -93,18 +122,33 @@ State Automat::put(char c) {
             	lastFinal = EXCEPTION;
             	stepsBack = states->counterToLastEndState;
             }
+            row += states->rowCounter;
+            if(states->rowCounter == 1) {
+                        	col = 0;
+                        }
     }
 
-    if (Automat::lastState == SLASH) {
-
+    if (Automat::lastState == SLASH)
+    {
     	stepsBack = states->counterToLastEndState;
     	lastNormal = states->StateSLASH(c);
+    	if (lastNormal == ERROR){
+    		lastFinal = OPERATOR;
+    	}
+    	row += states->rowCounter;
+    	if(states->rowCounter == 1) {
+    	            	col = 0;
+    	            }
     }
 
     if (Automat::lastState == COMMENT1) {
 
     	stepsBack = states->counterToLastEndState;
     	lastNormal = states->StateCOMMENT1(c);
+    	row += states->rowCounter;
+    	if(states->rowCounter == 1) {
+    	            	col = 0;
+    	            }
     }
 
     if (Automat::lastState == STAR1) {
@@ -112,34 +156,76 @@ State Automat::put(char c) {
     	commentLines = states->commentLinesCounter;
     	stepsBack = states->counterToLastEndState;
     	lastNormal = states->StateSTAR1(c);
+    	row += states->rowCounter;
+    	if(states->rowCounter == 1) {
+    	            	col = 0;
+    	            }
     }
 
     if (Automat::lastState == COMM) {
 
     	commentLines = states->commentLinesCounter;
     	lastNormal = states->StateCOMM(c);
+    	row += states->rowCounter;
+    	if(states->rowCounter == 1) {
+    	            	col = 0;
+    	            }
     }
 
     if (Automat::lastState == STAR2) {
 
     	lastNormal = states->StateSTAR2(c);
+    	row += states->rowCounter;
+    	if(states->rowCounter == 1) {
+    	            	col = 0;
+    	            }
     }
 
     if (Automat::lastState == COMMENT2) {
 
     	stepsBack = states->counterToLastEndState;
     	lastNormal = states->StateCOMMENT2(c);
+    	row += states->rowCounter;
+    	if(states->rowCounter == 1) {
+    	            	col = 0;
+    	            }
     }
 
     if (Automat::lastState == WHITESPACE) {
 
     	stepsBack = states->counterToLastEndState;
     	lastNormal = states->StateWHITESPACE(c);
+    	row += states->rowCounter;
+    	if(states->rowCounter == 1) {
+    	            	col = 0;
+    	            }
     }
+
+    if (Automat::lastState == NEWLINE) {
+
+       newLines++;
+       stepsBack = states->counterToLastEndState;
+       lastNormal = states->StateNEWLINE(c);
+       row += states->rowCounter;
+       if(states->rowCounter == 1) {
+                   	col = 0;
+                   }
+
+    }
+    /*
+    if (Automat::lastState == NEWLINE) {
+    	newLines = states->commentLinesCounter;
+    	stepsBack = states->counterToLastEndState;
+    	lastNormal = states->StateNEWLINE(c);
+    }*/
 
     if (Automat::lastState == ERROR)
     {
-        		stepsBack = states->counterToLastEndState;
+        stepsBack = states->counterToLastEndState;
+        row += states->rowCounter;
+        if(states->rowCounter == 1) {
+                    	col = 0;
+                    }
     }
 
         
@@ -171,6 +257,11 @@ int Automat::getCommentLines() {
 	return commentLines;
 }
 
+int Automat::getNewLines() {
+	cout << "Anzahl Newlines: " << newLines << endl;
+	return newLines;
+}
+
 /**
  * Wird vom Scanner aufgerufen um zu erfahren von welchem Typ das gerade zu 
  * erstellende Token sein soll
@@ -187,10 +278,10 @@ State Automat::getLastFinalState() {
  * auf den Startzustand zu setzen
  */
 void Automat::reset() {
-    
     Automat::lastState = INIT;   
     Automat::lastFinalState = INIT;
     Automat::commentLines = 0;
+    Automat::newLines = 0;
     cout << "cleared Automat" << endl;
 }
 
@@ -252,6 +343,14 @@ string Automat::enumToString (State state) {
 
 	if (state == WHITESPACE){
 		return "WHITESPACE";
+	}
+
+	if (state == NEWLINE){
+		return "NEWLINE";
+	}
+
+	if (state == IDENTIFIER) {
+		return "IDENTIFIER";
 	}
 
 	else{
@@ -365,19 +464,26 @@ int main() {
 	automat->reset();
 	cout << endl;
 
+	automat->put('/');
+	automat->put('4');
+	//automat->put('5');
+	automat->getStepsToLastFinalState();
+	automat->getLastFinalState();
+	automat->reset();
+	cout << endl;
+
+	automat->put('\n');
+	automat->put('\n');
+	automat->put('o');
+	automat->getNewLines();
+	automat->getStepsToLastFinalState();
+	automat->getLastFinalState();
+	automat->reset();
+	cout << endl;
+
 
 }
 
 //TODO
-// - Mehrzeilen Kommentar : Zustand Slash vorhanden -> Star1 (Anfang des Kommentars)
-//   Danach Zustand in dem allen auftreten darf z.B Comm -> Luca, was tun wir hier bei Zeilenumbrüchen
-//   Wenn wieder ein Stern kommt -> Zustand Star2  : ist nächstes Zeichen Slash?`-> Mehrzeilenkommentar korrekt und fertig
-//   Ist nächstes Zeichen kein Slash? -> wieder in Zustand Comm
-
-// -
 //
-// - ALLES mit ifdef /def/ endif deklarieren
-// -
-
-
-
+// Zeilen und Spaltenzähler -> mit reject-funktion (schritte zurück)

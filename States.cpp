@@ -11,6 +11,7 @@ using namespace std;
 State States::StateINIT(char c) {
     
     States::counterToLastEndState = 1;
+    States::rowCounter = 0;
         
         if(c >= '0' && c <= '9')
         {
@@ -48,9 +49,14 @@ State States::StateINIT(char c) {
         	return EOF;
         }
 
-        else if (c == ' ' || c == 9) // 9 ist in ASCII Tab
+        else if (c == ' ' || c == 9 || c == '\r') // 9 ist in ASCII Tab
         {
         	return WHITESPACE;
+        }
+        else if (c == '\n')
+        {
+        	States::rowCounter = 1;
+        	return NEWLINE;
         }
 
         else{
@@ -67,6 +73,7 @@ State States::StateINIT(char c) {
 State States::StateNUMBER(char c) {
 
     States::counterToLastEndState = 1;
+    States::rowCounter = 0;
             
         if(c >= '0' && c <= '9') 
         {
@@ -88,6 +95,7 @@ State States::StateNUMBER(char c) {
 State States::StateSTRING(char c) {
     
     States::counterToLastEndState = 1;
+    States::rowCounter = 0;
     
         
         if(((c >= '0') && (c <= '9')) || ((c >= 'a') && (c <= 'z')) || ((c >= 'A') && (c <= 'Z')))
@@ -109,6 +117,7 @@ State States::StateSTRING(char c) {
 State States::StateOPERATOR(char c) {
 
     States::counterToLastEndState = 1;
+    States::rowCounter = 0;
     return ERROR;
 }
 
@@ -121,6 +130,7 @@ State States::StateOPERATOR(char c) {
 State States::StateLESSTHAN(char c) {
     
     States::counterToLastEndState = 1;
+    States::rowCounter = 0;
     
         if(c == ':') 
         {
@@ -141,6 +151,7 @@ State States::StateLESSTHAN(char c) {
 State States::StateCOLON1(char c) {
     
     States::counterToLastEndState = 2;
+    States::rowCounter = 0;
     
         if(c == '>')
         {
@@ -161,6 +172,7 @@ State States::StateCOLON1(char c) {
 State States::StateCOLON2(char c) {
     
     States::counterToLastEndState = 2;
+    States::rowCounter = 0;
             
         if(c == '=')
         {
@@ -181,6 +193,7 @@ State States::StateCOLON2(char c) {
 State States::StateSLASH(char c) {
 
 	States::counterToLastEndState = 1;
+	States::rowCounter = 0;
 
 	if(c == '/') {
 		return COMMENT1; // Kommentare mit //
@@ -189,7 +202,7 @@ State States::StateSLASH(char c) {
 		return STAR1; // Kommentare mit /*
 	}
 	else {
-		return OPERATOR;
+		return ERROR;
 	}
 }
 
@@ -201,12 +214,14 @@ State States::StateSLASH(char c) {
 State States::StateSTAR1(char c) {
 
 	States::counterToLastEndState = 1;
+	States::rowCounter = 0;
 
 	if (c == '*') {
 		return STAR2;
 	}
 	else if (c == '\n') {
 		States::commentLinesCounter++;
+		States::rowCounter = 1;
 		return COMM;
 	}
 	else {
@@ -221,11 +236,14 @@ State States::StateSTAR1(char c) {
  */
 State States::StateCOMM(char c) {
 
+	States::rowCounter = 0;
+
 	if (c == '*') {
 		return STAR2;
 	}
 	else if (c == '\n') {
 		States::commentLinesCounter++;
+		States::rowCounter = 1;
 		return COMM;
 	}
 	else {
@@ -240,6 +258,8 @@ State States::StateCOMM(char c) {
  * @return Zustand, der nach der Verarbeitung des Zeichens eingenommen wurde
  */
 State States::StateSTAR2(char c) {
+
+	States::rowCounter = 0;
 
 	if (c == '/') {
 		return COMMENT2;
@@ -257,7 +277,7 @@ State States::StateSTAR2(char c) {
 State States::StateCOMMENT2(char c) {
 
 	States::counterToLastEndState = 1;
-
+	States::rowCounter = 0;
 	return ERROR;
 }
 
@@ -269,11 +289,13 @@ State States::StateCOMMENT2(char c) {
 State States::StateCOMMENT1(char c) {
 
 	States::counterToLastEndState = 1;
+	States::rowCounter = 0;
 
 	if (c != '\n') {
 		return COMMENT1;
 	}
 	else {
+		States::rowCounter = 1;
 		return ERROR;
 	}
 }
@@ -285,9 +307,24 @@ State States::StateCOMMENT1(char c) {
  */
 State States::StateWHITESPACE(char c) {
 	States::counterToLastEndState = 1;
+	States::rowCounter = 0;
 
-	if (c == ' ' || c == 9) {
+	if (c == ' ' || c == 9 || c == '\r') {
 		return WHITESPACE;
+	}
+	else {
+		return ERROR;
+	}
+}
+
+
+State States::StateNEWLINE(char c) {
+	States::counterToLastEndState = 1;
+	States::rowCounter = 0;
+
+	if (c == '\n') {
+		States::rowCounter = 1;
+		return NEWLINE;
 	}
 	else {
 		return ERROR;
