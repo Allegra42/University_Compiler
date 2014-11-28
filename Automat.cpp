@@ -262,6 +262,27 @@ int Automat::getNewLines() {
 	return newLines;
 }
 
+int Automat::getCol() {
+	cout << "Spalte: " << col << endl;
+	return col;
+}
+
+int Automat::getRow() {
+	cout << "Zeile: " << row << endl;
+	return row;
+}
+
+void Automat::reject(int colsBack) {
+	while (colsBack > 0 && col > 0) {
+		col--;
+		colsBack--;
+	}
+	if (col == 0) {
+		row--;
+		//Hier ungenauigkeiten, da ich sonst auch speichern müsste wie viele zeichen die letzte spalte lang ist...
+	}
+}
+
 /**
  * Wird vom Scanner aufgerufen um zu erfahren von welchem Typ das gerade zu 
  * erstellende Token sein soll
@@ -361,60 +382,84 @@ string Automat::enumToString (State state) {
 
 int main() {
 	Automat *automat = new Automat();
+
+	automat->getRow();
+	automat->getCol();
 	automat->put('a');
 	automat->put('b');
 	automat->put('9');
 	automat->put('+');
 	automat->getStepsToLastFinalState();
 	automat->getLastFinalState();
+	automat->reject(automat->getStepsToLastFinalState());
 	automat->reset();
 	cout << endl;
 
+	automat->getRow();
+	automat->getCol();
 	automat->put('+');
 	automat->put('a');
 	automat->getStepsToLastFinalState();
 	automat->getLastFinalState();
+	automat->reject(automat->getStepsToLastFinalState());
 	automat->reset();
 	cout << endl;
 
+	automat->getRow();
+	automat->getCol();
 	automat->put(':');
 	automat->put('=');
 	automat->put(0);
 	automat->getStepsToLastFinalState();
 	automat->getLastFinalState();
+	automat->reject(automat->getStepsToLastFinalState());
 	automat->reset();
 	cout << endl;
 
+	automat->getRow();
+	automat->getCol();
 	automat->put('<');
 	automat->put(':');
 	automat->put('>');
 	automat->put('j');
 	automat->getStepsToLastFinalState();
 	automat->getLastFinalState();
+	automat->reject(automat->getStepsToLastFinalState());
 	automat->reset();
 	cout << endl;
 
+	automat->getRow();
+	automat->getCol();
 	automat->put('<');
 	automat->put(':');
 	automat->put('=');
 	automat->getStepsToLastFinalState();
 	automat->getLastFinalState();
+	automat->reject(automat->getStepsToLastFinalState());
 	automat->reset();
 	cout << endl;
 
+	automat->getRow();
+	automat->getCol();
 	automat->put(':');
 	automat->put('+');
 	automat->getStepsToLastFinalState();
 	automat->getLastFinalState();
+	automat->reject(automat->getStepsToLastFinalState());
 	automat->reset();
 	cout << endl;
 
+	automat->getRow();
+	automat->getCol();
 	automat->put('\0');
 	automat->getStepsToLastFinalState();
 	automat->getLastFinalState();
+	automat->reject(automat->getStepsToLastFinalState());
 	automat->reset();
 	cout << endl;
 
+	automat->getRow();
+	automat->getCol();
 	automat->put('/');
 	automat->put('/');
 	automat->put('a');
@@ -424,9 +469,12 @@ int main() {
 	automat->put('\n');
 	automat->getStepsToLastFinalState();
 	automat->getLastFinalState();
+	automat->reject(automat->getStepsToLastFinalState());
 	automat->reset();
 	cout << endl;
 
+	automat->getRow();
+	automat->getCol();
 	automat->put('/');
 	automat->put('*');
 	automat->put('a');
@@ -438,9 +486,12 @@ int main() {
 	automat->getStepsToLastFinalState();
 	automat->getCommentLines();
 	automat->getLastFinalState();
+	automat->reject(automat->getStepsToLastFinalState());
 	automat->reset();
 	cout << endl;
 
+	automat->getRow();
+	automat->getCol();
 	automat->put('/');
 	automat->put('*');
 	automat->put('\n');
@@ -452,32 +503,42 @@ int main() {
 	automat->getStepsToLastFinalState();
 	automat->getCommentLines();
 	automat->getLastFinalState();
+	automat->reject(automat->getStepsToLastFinalState());
 	automat->reset();
 	cout << endl;
 
+	automat->getRow();
+	automat->getCol();
 	automat->put(' ');
 	automat->put(' ');
 	automat->put(9);
 	automat->put('p');
 	automat->getStepsToLastFinalState();
 	automat->getLastFinalState();
+	automat->reject(automat->getStepsToLastFinalState());
 	automat->reset();
 	cout << endl;
 
+	automat->getRow();
+	automat->getCol();
 	automat->put('/');
 	automat->put('4');
 	//automat->put('5');
 	automat->getStepsToLastFinalState();
 	automat->getLastFinalState();
+	automat->reject(automat->getStepsToLastFinalState());
 	automat->reset();
 	cout << endl;
 
+	automat->getRow();
+	automat->getCol();
 	automat->put('\n');
 	automat->put('\n');
 	automat->put('o');
 	automat->getNewLines();
 	automat->getStepsToLastFinalState();
 	automat->getLastFinalState();
+	automat->reject(automat->getStepsToLastFinalState());
 	automat->reset();
 	cout << endl;
 
