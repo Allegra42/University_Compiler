@@ -20,6 +20,13 @@ Automat::Automat(){
 
 }
 
+void Automat::calcCol() {
+	row += states->rowCounter;
+	if (states->rowCounter == 1) {
+		col = 0;
+	}
+}
+
 /**
  * Methode, die der Scanner aufruft, um zu Erfahren was für ein Typ das Zeichen hat
  * @param c Eingabezeichen vom Scanner
@@ -46,10 +53,7 @@ State Automat::put(char c) {
             }
 
             stepsBack = states->counterToLastEndState;
-            row += states->rowCounter;
-            if(states->rowCounter == 1) {
-            	col = 0;
-            }
+            Automat::calcCol();
 
     }
         
@@ -57,40 +61,28 @@ State Automat::put(char c) {
     {
             lastNormal = states->StateNUMBER(c);
             stepsBack = states->counterToLastEndState;
-            row += states->rowCounter;
-            if(states->rowCounter == 1) {
-            	col = 0;
-            }
+            Automat::calcCol();
     }
         
     if (Automat::lastState == STRING)
     {
             lastNormal = states->StateSTRING(c);
             stepsBack = states->counterToLastEndState;
-            row += states->rowCounter;
-            if(states->rowCounter == 1) {
-                        	col = 0;
-                        }
+            Automat::calcCol();
     }
         
     if (Automat::lastState == OPERATOR)
     {
             lastNormal = states->StateOPERATOR(c);
             stepsBack = states->counterToLastEndState;
-            row += states->rowCounter;
-            if(states->rowCounter == 1) {
-                        	col = 0;
-                        }
+            Automat::calcCol();
     }
         
     if (Automat::lastState == LESSTHAN)
     {
             lastNormal = states->StateLESSTHAN(c);
             stepsBack = states->counterToLastEndState;
-            row += states->rowCounter;
-            if(states->rowCounter == 1) {
-                        	col = 0;
-                        }
+            Automat::calcCol();
     }
         
     if (Automat::lastState == COLON1)
@@ -104,10 +96,7 @@ State Automat::put(char c) {
             	lastFinal = LESSTHAN;
             	stepsBack = states->counterToLastEndState;
             }
-            row += states->rowCounter;
-            if(states->rowCounter == 1) {
-                        	col = 0;
-                        }
+            Automat::calcCol();
     }
 
         
@@ -122,10 +111,7 @@ State Automat::put(char c) {
             	lastFinal = EXCEPTION;
             	stepsBack = states->counterToLastEndState;
             }
-            row += states->rowCounter;
-            if(states->rowCounter == 1) {
-                        	col = 0;
-                        }
+            Automat::calcCol();
     }
 
     if (Automat::lastState == SLASH)
@@ -135,20 +121,14 @@ State Automat::put(char c) {
     	if (lastNormal == ERROR){
     		lastFinal = OPERATOR;
     	}
-    	row += states->rowCounter;
-    	if(states->rowCounter == 1) {
-    	            	col = 0;
-    	            }
+    	Automat::calcCol();
     }
 
     if (Automat::lastState == COMMENT1) {
 
     	stepsBack = states->counterToLastEndState;
     	lastNormal = states->StateCOMMENT1(c);
-    	row += states->rowCounter;
-    	if(states->rowCounter == 1) {
-    	            	col = 0;
-    	            }
+    	Automat::calcCol();
     }
 
     if (Automat::lastState == STAR1) {
@@ -156,49 +136,34 @@ State Automat::put(char c) {
     	commentLines = states->commentLinesCounter;
     	stepsBack = states->counterToLastEndState;
     	lastNormal = states->StateSTAR1(c);
-    	row += states->rowCounter;
-    	if(states->rowCounter == 1) {
-    	            	col = 0;
-    	            }
+    	Automat::calcCol();
     }
 
     if (Automat::lastState == COMM) {
 
     	commentLines = states->commentLinesCounter;
     	lastNormal = states->StateCOMM(c);
-    	row += states->rowCounter;
-    	if(states->rowCounter == 1) {
-    	            	col = 0;
-    	            }
+    	Automat::calcCol();
     }
 
     if (Automat::lastState == STAR2) {
 
     	lastNormal = states->StateSTAR2(c);
-    	row += states->rowCounter;
-    	if(states->rowCounter == 1) {
-    	            	col = 0;
-    	            }
+    	Automat::calcCol();
     }
 
     if (Automat::lastState == COMMENT2) {
 
     	stepsBack = states->counterToLastEndState;
     	lastNormal = states->StateCOMMENT2(c);
-    	row += states->rowCounter;
-    	if(states->rowCounter == 1) {
-    	            	col = 0;
-    	            }
+    	Automat::calcCol();
     }
 
     if (Automat::lastState == WHITESPACE) {
 
     	stepsBack = states->counterToLastEndState;
     	lastNormal = states->StateWHITESPACE(c);
-    	row += states->rowCounter;
-    	if(states->rowCounter == 1) {
-    	            	col = 0;
-    	            }
+    	Automat::calcCol();
     }
 
     if (Automat::lastState == NEWLINE) {
@@ -206,10 +171,7 @@ State Automat::put(char c) {
        newLines++;
        stepsBack = states->counterToLastEndState;
        lastNormal = states->StateNEWLINE(c);
-       row += states->rowCounter;
-       if(states->rowCounter == 1) {
-                   	col = 0;
-                   }
+       Automat::calcCol();
 
     }
     /*
@@ -222,10 +184,7 @@ State Automat::put(char c) {
     if (Automat::lastState == ERROR)
     {
         stepsBack = states->counterToLastEndState;
-        row += states->rowCounter;
-        if(states->rowCounter == 1) {
-                    	col = 0;
-                    }
+		Automat::calcCol();
     }
 
         

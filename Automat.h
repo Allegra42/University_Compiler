@@ -67,6 +67,8 @@ private:
     int newLines;
     int row; //Reihe
     int col; //Spalte
+
+	void calcCol();
 };
 
 #endif
