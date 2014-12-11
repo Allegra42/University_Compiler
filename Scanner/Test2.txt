@@ -1,0 +1,48 @@
+X:=3+4;
+/* eine einfache Aufgabe !! */ Z2R32
+y  X / (X - 4)
+Z := ((3 + 4 - 6);
+Resultat := / a     X LAST
+
+71 /* blos ein mehrzeilen Kommentar
+* 
+* 
+*    mit   SPACES **** und ***/ Sternen
+ 
+Zeile 12
+
+
+
+// KOMM
+
+ZZZ 18
+
+/** abc*/
+Z21R1   /****/R21C15//ENDE
+221
+
+
+
+
+--------------
+
+
+H*A*LL*O WELT // Anmerkung
+/* WEITERE ZEILEN y XX:=3+4;X:=3+4;
+/* eine einfache Aufgabe !! */ Z2R32
+y  X / (X - 4)
+Z := ((3 + 4 - 6);
+Resultat := / a     X
+/* eine einfache Aufgabe !! */ Z2R32
+y  X / (X - 4)
+Z := ((3 + 4 - 6);
+Resultat := / a     X
+
+
+sdfajkl
+
+adsf
+
+Gustav */
+Gustav
+Gustav
