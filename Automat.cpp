@@ -21,8 +21,9 @@ Automat::Automat(){
 }
 
 void Automat::calcCol() {
-	row += states->rowCounter;
-	if (states->rowCounter == 1) {
+	row = states->rowCounter;
+
+	if (states->rowCounter > 0) {
 		col = 0;
 	}
 }
@@ -53,7 +54,7 @@ State Automat::put(char c) {
             }
 
             stepsBack = states->counterToLastEndState;
-            Automat::calcCol();
+            //Automat::calcCol();
 
     }
         
@@ -61,28 +62,28 @@ State Automat::put(char c) {
     {
             lastNormal = states->StateNUMBER(c);
             stepsBack = states->counterToLastEndState;
-            Automat::calcCol();
+            //Automat::calcCol();
     }
         
     if (Automat::lastState == STRING)
     {
             lastNormal = states->StateSTRING(c);
             stepsBack = states->counterToLastEndState;
-            Automat::calcCol();
+            //Automat::calcCol();
     }
         
     if (Automat::lastState == OPERATOR)
     {
             lastNormal = states->StateOPERATOR(c);
             stepsBack = states->counterToLastEndState;
-            Automat::calcCol();
+            //Automat::calcCol();
     }
         
     if (Automat::lastState == LESSTHAN)
     {
             lastNormal = states->StateLESSTHAN(c);
             stepsBack = states->counterToLastEndState;
-            Automat::calcCol();
+            //Automat::calcCol();
     }
         
     if (Automat::lastState == COLON1)
@@ -96,7 +97,7 @@ State Automat::put(char c) {
             	lastFinal = LESSTHAN;
             	stepsBack = states->counterToLastEndState;
             }
-            Automat::calcCol();
+            //Automat::calcCol();
     }
 
         
@@ -111,7 +112,7 @@ State Automat::put(char c) {
             	lastFinal = EXCEPTION;
             	stepsBack = states->counterToLastEndState;
             }
-            Automat::calcCol();
+            //Automat::calcCol();
     }
 
     if (Automat::lastState == SLASH)
@@ -121,14 +122,14 @@ State Automat::put(char c) {
     	if (lastNormal == ERROR){
     		lastFinal = OPERATOR;
     	}
-    	Automat::calcCol();
+    	//Automat::calcCol();
     }
 
     if (Automat::lastState == COMMENT1) {
 
     	stepsBack = states->counterToLastEndState;
     	lastNormal = states->StateCOMMENT1(c);
-    	Automat::calcCol();
+    	//Automat::calcCol();
     }
 
     if (Automat::lastState == STAR1) {
@@ -136,34 +137,34 @@ State Automat::put(char c) {
     	commentLines = states->commentLinesCounter;
     	stepsBack = states->counterToLastEndState;
     	lastNormal = states->StateSTAR1(c);
-    	Automat::calcCol();
+    	//Automat::calcCol();
     }
 
     if (Automat::lastState == COMM) {
 
     	commentLines = states->commentLinesCounter;
     	lastNormal = states->StateCOMM(c);
-    	Automat::calcCol();
+    	//Automat::calcCol();
     }
 
     if (Automat::lastState == STAR2) {
 
     	lastNormal = states->StateSTAR2(c);
-    	Automat::calcCol();
+    	//Automat::calcCol();
     }
 
     if (Automat::lastState == COMMENT2) {
 
     	stepsBack = states->counterToLastEndState;
     	lastNormal = states->StateCOMMENT2(c);
-    	Automat::calcCol();
+    	//Automat::calcCol();
     }
 
     if (Automat::lastState == WHITESPACE) {
 
     	stepsBack = states->counterToLastEndState;
     	lastNormal = states->StateWHITESPACE(c);
-    	Automat::calcCol();
+    //	Automat::calcCol();
     }
 
     if (Automat::lastState == NEWLINE) {
@@ -171,7 +172,7 @@ State Automat::put(char c) {
        newLines++;
        stepsBack = states->counterToLastEndState;
        lastNormal = states->StateNEWLINE(c);
-       Automat::calcCol();
+      // Automat::calcCol();
 
     }
     /*
@@ -184,9 +185,10 @@ State Automat::put(char c) {
     if (Automat::lastState == ERROR)
     {
         stepsBack = states->counterToLastEndState;
-		Automat::calcCol();
+		//Automat::calcCol();
     }
 
+    Automat::calcCol();
         
     Automat::lastFinalState = lastFinal;
     Automat::lastState = lastNormal;
@@ -367,7 +369,7 @@ int main() {
 	automat->getRow();
 	automat->getCol();
 	automat->put(':');
-	automat->put('=');
+	//automat->put('=');
 	automat->put(0);
 	automat->getStepsToLastFinalState();
 	automat->getLastFinalState();
@@ -491,9 +493,9 @@ int main() {
 
 	automat->getRow();
 	automat->getCol();
-	automat->put('\n');
-	automat->put('\n');
-	automat->put('o');
+	automat->put('<');
+	automat->put(' ');
+	//automat->put('o');
 	automat->getNewLines();
 	automat->getStepsToLastFinalState();
 	automat->getLastFinalState();
@@ -501,6 +503,8 @@ int main() {
 	automat->reset();
 	cout << endl;
 
+	automat->getRow();
+		automat->getCol();
 
 }
 
