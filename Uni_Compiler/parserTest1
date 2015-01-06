@@ -1,0 +1,36 @@
+/** warm up  **/
+
+int v1;
+int v2;
+int [2] backup;
+int ctr;
+
+v1:=5;
+v2:=3;
+
+backup[0]:=v1;/** beginnen die Felder mit der 0 beim Zählen? **/
+backup[1]:=v2;
+
+while(v1<10)v1:=v1+1; /* v1 <- 10 */
+
+while(v1<:>0){
+	/* ein Tabulator mit der Groesse 8 */
+	v1:=v1-1;
+	v2:=v1+1;
+};
+
+ctr:=0;
+v1:=backup[0];
+v2:=backup[1];
+
+/** absichtlich falsche Multiplikation, nur um das lustige Konstrukt zu sehen ^^ **/
+/** man beachte das Semikolon in der letzten Zeile, das STATEMENTS nach dem STATEMENT while platziert ^^ **/
+
+while(v1>0)
+	while(0<v2)>{
+		ctr:=1+ctr;
+		v2--;
+		v1--;
+	}
+;
+

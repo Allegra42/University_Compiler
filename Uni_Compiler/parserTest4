@@ -1,0 +1,69 @@
+/** **/
+int a;
+int b;
+int c;
+int d;
+int e;
+int result;
+
+a:=27;
+b:=-3;
+c:=9;
+d:=-18;
+
+/** einfaches Klammernjonglieren **/
+
+result:=a+b-c+d-e;
+write(result);
+
+result:=a*b+c*d-e;
+write(result);
+
+result:=(a*b)+(c*d)-e;
+write(result);
+
+result:=0;
+write(result);
+
+result:=((a*b)+(c*(d)))-e;
+write(result;
+
+result:=(((a*b)+(c*(d)))-e);
+write(result);
+
+result:=a/b*c/b;
+write(result);
+
+result:=(a/b)*(c/b);
+write(result);
+
+result:=a/(a*c)/b;
+write(result);
+
+
+/** folgendes wird nur getestet, weil es geht **/
+/** bzw. es gehen muss **/
+
+{};
+
+{
+	{
+		{
+			{
+				while(e<0) if(e<0)e:=1+e else a:=30;
+			};
+		};
+		write(1);
+	};
+	read(a);
+	write(a);
+};
+
+
+/** was stimmt? **/
+
+write(a*a-1);
+write((a*a)-1);
+write(a*(a-1));
+
+

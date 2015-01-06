@@ -1,0 +1,6 @@
+/** Fehler wird provoziert und ist gewollt **/
+/** es sollte kein Code produziert werden **/
+
+int num;
+
+nuhm:=0;
