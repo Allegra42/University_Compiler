@@ -1,3 +1,4 @@
+
 #include "scanner.h"
 
 #include <errno.h>
@@ -118,6 +119,8 @@ Token* Scanner::nextToken(){
         
     
     }
+    
+    cout << "TOKEN: "<< automat -> enumToString( tokenReference-> getContainer() ->getType() ) << ":" << tokenReference -> getRow() << "/" << tokenReference -> getCol()<< endl;
     
     return tokenReference;
 

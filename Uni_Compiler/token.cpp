@@ -13,6 +13,7 @@ Token::Token(State gState,int row,int col){
     
 }
 
+// gibt den aktuellen Tokentyp zurueck
 state Token::getType(){
     return container->getType();
 }

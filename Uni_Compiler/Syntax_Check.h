@@ -3,8 +3,14 @@
 
 #include "scanner.h"
 #include "token.h"
+#include "Node.h"
 
 using namespace std;
+
+enum fail{
+	CORRECT, FAIL
+};
+typedef fail FailureBit;
 
 class Syntax_Check {
 public:
@@ -14,19 +20,20 @@ public:
 private:
 	Scanner* scannerpointer;
 	void prog();
-	void decls();
-	void decl();
-	void array();
-	void statements();
-	void statement();
-	void exp();
-	void exp2();
-	void index();
-	void op_exp();
-	void op();
+	TreeNode decls();
+	TreeNode decl();
+	TreeNode array();
+	TreeNode statements();
+	TreeNode statement();
+	TreeNode exp();
+	TreeNode exp2();
+	TreeNode index();
+	TreeNode op_exp();
+	TreeNode op();
 	Token* actToken;
 	State tokenType;
-
+	TreeNode rootNode;
+	FailureBit failBit;
 
 
 };

@@ -14,8 +14,10 @@ Syntax_Check::Syntax_Check(char* sourcefile){
 
 	scannerpointer = new Scanner(sourcefile);
 	actToken = scannerpointer->nextToken();
+	failBit = CORRECT;
 //    actToken=new  Token(ERROR,1,1);
 	tokenType = actToken->getType();
+	rootNode = new TreeNode(PROG);
 	this -> prog();
 }
 
@@ -26,41 +28,57 @@ Syntax_Check::~Syntax_Check(){
 }
 
 void Syntax_Check::prog(){
-	decls();
-	statements();
-}
-
-void Syntax_Check::decls(){
-	decl();
-	if(tokenType == OPERATOR_SEMICOL){
-		actToken = scannerpointer->nextToken();
-		tokenType = actToken->getType();
-		decls();
+	rootNode.nodeArray[0] = decls();
+	if(failBit == CORRECT){
+		rootNode.nodeArray[1] = statements();
 	}
 }
 
-void Syntax_Check::decl(){
-	if(tokenType == NUMBER){
+TreeNode Syntax_Check::decls(){
+	TreeNode declsNode;
+	if(tokenType == IDENTIFIER_INT){
+		declsNode = new TreeNode(DECLS);
+		declsNode.nodeArray[0] = decl();
+			if(tokenType == OPERATOR_SEMICOL){
+				actToken = scannerpointer->nextToken();
+				tokenType = actToken->getType();
+				declsNode.nodeArray[1] = decls();
+			}
+	}
+	else{
+		declsNode = new TreeNode(DECLS_EPS);
+	}
+	return declsNode;
+}
+
+TreeNode Syntax_Check::decl(){
+	TreeNode declNode = new TreeNode(DECL);
+	if(tokenType == IDENTIFIER_INT){
 		actToken = scannerpointer->nextToken();
 		tokenType = actToken->getType();
-		array();
+		declNode.nodeArray[0] = array();
 		if(tokenType == STRING){
 			actToken = scannerpointer->nextToken();
 			tokenType = actToken->getType();
 		}
 		else{
+				failBit = FAIL;
 				cout << "Fehler nahe " << actToken->getRow() << " , " << actToken->getCol() << endl;
         		cout << actToken -> getContainer() -> getValue() << endl;
 		 }
 	}
 	else{
+			failBit = FAIL;
 			cout << "Fehler nahe " << actToken->getRow() << " , " << actToken->getCol() << endl;
-    		cout << actToken -> getContainer() -> getValue() << endl;
-	 }
+	        cout << actToken -> getContainer() -> getValue() << endl;
+	}
+	return declNode;
 }
 
-void Syntax_Check::array(){
+TreeNode Syntax_Check::array(){
+	TreeNode arrayNode;
 	if(tokenType == OPERATOR_SQUERED_OPEN){
+		arrayNode = new TreeNode(ARRAY);
 		actToken = scannerpointer->nextToken();
 		tokenType = actToken->getType();
 		if(tokenType == NUMBER){
@@ -71,67 +89,91 @@ void Syntax_Check::array(){
 				tokenType = actToken->getType();
 			}
 			else{
+					failBit = FAIL;
 					cout << "Fehler nahe " << actToken->getRow() << " , " << actToken->getCol() << endl;
             		cout << actToken -> getContainer() -> getValue() << endl;
 			}
 		}
 		else{
+				failBit = FAIL;
 				cout << "Fehler nahe " << actToken->getRow() << " , " << actToken->getCol() << endl;
         		cout << actToken -> getContainer() -> getValue() << endl;
 		 }
 	}
-}
-
-void Syntax_Check::statements(){
-	statement();
-	cout  << "done" << endl;
-	if(tokenType == OPERATOR_SEMICOL){
-		actToken = scannerpointer->nextToken();
-		tokenType = actToken->getType();
-		statements();
+	else{
+		arrayNode = new TreeNode(ARRAY_EPS);
 	}
+	return arrayNode;
 }
 
-void Syntax_Check::statement(){
+TreeNode Syntax_Check::statements(){
+	TreeNode statementsNode;
+	if(tokenType == STRING || tokenType == IDENTIFIER_WRITE || tokenType == IDENTIFIER_READ
+			|| tokenType == OPERATOR_CUREVED_OPEN || tokenType == IDENTIFIER_IF || tokenType == IDENTIFIER_WHILE){
+		statementsNode = new TreeNode(STATEMENTS);
+		statementsNode.nodeArray[0] = statement();
+			cout  << "done" << endl;
+			if(tokenType == OPERATOR_SEMICOL){
+				actToken = scannerpointer->nextToken();
+				tokenType = actToken->getType();
+				statementsNode.nodeArray[1] = statements();
+			}
+	}
+	else{
+		statementsNode = new TreeNode(STATEMENTS_EPS);
+	}
+	return statementsNode;
+}
 
-	if(tokenType == STRING){
+TreeNode Syntax_Check::statement(){
+
+	TreeNode statementNode = new TreeNode(STATEMENT);
+	switch(tokenType){
+
+
+	case STRING:{
 		actToken = scannerpointer->nextToken();
 		tokenType = actToken->getType();
-		index();
+		statementNode.nodeArray[0] = index();
 		if(tokenType == OPERATOR_DEFINITION){
 			actToken = scannerpointer->nextToken();
 			tokenType = actToken->getType();
-			exp();
+			statementNode.nodeArray[1] = exp();
 		}else{
+			failBit = FAIL;
 			cout << "Fehler nahe " << actToken->getRow() << " , " << actToken->getCol() << endl;
     		cout << actToken -> getContainer() -> getValue() << endl;
 		}
 	}
+	break;
 
 
-	if(tokenType ==  IDENTIFIER_WRITE){
+	case IDENTIFIER_WRITE:{
 		actToken = scannerpointer->nextToken();
 		tokenType = actToken->getType();
 		if(tokenType == OPERATOR_BR_OPEN){
 			actToken = scannerpointer->nextToken();
 			tokenType = actToken->getType();
-			exp();
+			statementNode.nodeArray[0] = exp();
 			if(tokenType == OPERATOR_BR_CLOSE){
 				actToken = scannerpointer->nextToken();
 				tokenType = actToken->getType();
 			}
 			else{
+				failBit = FAIL;
 				cout << "Fehler nahe " << actToken->getRow() << " , " << actToken->getCol() << endl;
         		cout << actToken -> getContainer() -> getValue() << endl;
 			}
 		}else{
+			failBit = FAIL;
 			cout << "Fehler nahe " << actToken->getRow() << " , " << actToken->getCol() << endl;
     		cout << actToken -> getContainer() -> getValue() << endl;
 		}
 	}
+	break;
 
 
-	if(tokenType == IDENTIFIER_READ){
+	case IDENTIFIER_READ:{
 		actToken = scannerpointer->nextToken();
 		tokenType = actToken->getType();
 		if(tokenType == OPERATOR_BR_OPEN){
@@ -140,186 +182,223 @@ void Syntax_Check::statement(){
 			if(tokenType == STRING){
 				actToken = scannerpointer->nextToken();
 				tokenType = actToken->getType();
-				index();
+				statementNode.nodeArray[0] = index();
 				if(tokenType == OPERATOR_BR_CLOSE){
 					actToken = scannerpointer->nextToken();
 					tokenType = actToken->getType();
 				}
 				else{
+					failBit = FAIL;
 					cout << "Fehler nahe " << actToken->getRow() << " , " << actToken->getCol() << endl;
             		cout << actToken -> getContainer() -> getValue() << endl;
 				}
 			}
 			else {
+				failBit = FAIL;
 				cout << "Fehler nahe " << actToken->getRow() << " , " << actToken->getCol() << endl;
         		cout << actToken -> getContainer() -> getValue() << endl;
 			}
 		}
 		else{
+			failBit = FAIL;
 			cout << "Fehler nahe " << actToken->getRow() << " , " << actToken->getCol() << endl;
     		cout << actToken -> getContainer() -> getValue() << endl;
 		}
 	}
+	break;
 
 
 
-	if(tokenType == OPERATOR_CUREVED_OPEN){
+	case OPERATOR_CUREVED_OPEN:{
 		actToken = scannerpointer->nextToken();
 		tokenType = actToken->getType();
-		statements();
+		statementNode.nodeArray[0] = statements();
 		if(tokenType == OPERATOR_CURVED_CLOSED){
 			actToken = scannerpointer->nextToken();
 			tokenType = actToken->getType();
 		}
 		else{
+			failBit = FAIL;
 			cout << "Fehler nahe " << actToken->getRow() << " , " << actToken->getCol() << endl;
     		cout << actToken -> getContainer() -> getValue() << endl;
 		}
 	}
+	break;
 
 
-	if(tokenType == IDENTIFIER_IF){
+	case IDENTIFIER_IF:{
 		actToken = scannerpointer->nextToken();
 		tokenType = actToken->getType();
 		if(tokenType == OPERATOR_BR_OPEN){
 			actToken = scannerpointer->nextToken();
 			tokenType = actToken->getType();
-			exp();
+			statementNode.nodeArray[0] = exp();
 			if(tokenType == OPERATOR_BR_CLOSE){
 				actToken = scannerpointer->nextToken();
 				tokenType = actToken->getType();
-				statement();
+				statementNode.nodeArray[1] = statement();
 				if(tokenType == IDENTIFIER_ELSE){
 					actToken = scannerpointer->nextToken();
 					tokenType = actToken->getType();
-					statement();
+					statementNode.nodeArray[2] = statement();
 				}
 				else{
+					failBit = FAIL;
 					cout << "Fehler nahe " << actToken->getRow() << " , " << actToken->getCol() << endl;
             		cout << actToken -> getContainer() -> getValue() << endl;
 				}
 			}
 			else{
+				failBit = FAIL;
 				cout << "Fehler nahe " << actToken->getRow() << " , " << actToken->getCol() << endl;
         		cout << actToken -> getContainer() -> getValue() << endl;
 			}
 		}
 		else{
+			failBit = FAIL;
 			cout << "Fehler nahe " << actToken->getRow() << " , " << actToken->getCol() << endl;
     		cout << actToken -> getContainer() -> getValue() << endl;
 		}
 	}
+	break;
 
 
 
-	if(tokenType == IDENTIFIER_WHILE){
+	case IDENTIFIER_WHILE:{
 		actToken = scannerpointer->nextToken();
 		tokenType = actToken->getType();
 		if(tokenType == OPERATOR_BR_OPEN){
 		    actToken = scannerpointer->nextToken();
 		    tokenType = actToken->getType();
-			exp();
+			statementNode.nodeArray[0] = exp();
 			if(tokenType == OPERATOR_BR_CLOSE){
 				actToken = scannerpointer->nextToken();
 				tokenType = actToken->getType();
-				statement();
+				statementNode.nodeArray[1] = statement();
 			}
 			else{
+				failBit = FAIL;
 				cout << "Fehler nahe " << actToken->getRow() << " , " << actToken->getCol() << endl;
         		cout << actToken -> getContainer() -> getValue() << endl;
 			}
 		}
 		else{
+			failBit = FAIL;
 			cout << "Fehler nahe " << actToken->getRow() << " , " << actToken->getCol() << endl;
     		cout << actToken -> getContainer() -> getValue() << endl;
 		}
 	}
-/**	else{
-		cout << "Fehler nahe " << actToken->getRow() << " , " << actToken->getCol() << endl;
-		cout << actToken -> getContainer() -> getValue() << endl;
-	}*/
+	break;
+
+	}
+	return statementNode;
 }
 
-void Syntax_Check::exp(){
-	exp2();
-	op_exp();
+TreeNode Syntax_Check::exp(){
+	TreeNode expNode = new TreeNode(EXP);
+
+	expNode.nodeArray[0] = exp2();
+	expNode.nodeArray[1] = op_exp();
+
+	return expNode;
 }
 
-void Syntax_Check::exp2(){
+TreeNode Syntax_Check::exp2(){
+	TreeNode exp2Node = new TreeNode(EXP2);
+
 	if(tokenType == OPERATOR_BR_OPEN){
 		actToken = scannerpointer->nextToken();
 		tokenType = actToken->getType();
-		exp();
+		exp2Node.nodeArray[0] = exp();
 		if(tokenType == OPERATOR_BR_CLOSE){
 			actToken = scannerpointer->nextToken();
 			tokenType = actToken->getType();
 		}
 		else{
+			failBit = FAIL;
 			cout << "Fehler nahe " << actToken->getRow() << " , " << actToken->getCol() << endl;
     		cout << actToken -> getContainer() -> getValue() << endl;
 		}
 	}
 
 
-
-	if(tokenType == STRING){
+	else if(tokenType == STRING){
 		actToken = scannerpointer->nextToken();
 		tokenType = actToken->getType();
-		index();
+		exp2Node.nodeArray[0] = index();
 	}
 
 
-	if(tokenType == NUMBER){
+	else if(tokenType == NUMBER){
 		actToken = scannerpointer->nextToken();
 		tokenType = actToken->getType();
 	}
 
 
-	if(tokenType == OPERATOR_MINUS){
+	else if(tokenType == OPERATOR_MINUS){
 		actToken = scannerpointer->nextToken();
 		tokenType = actToken->getType();
-		exp2();
+		exp2Node.nodeArray[0] = exp2();
 	}
 
 
-	if(tokenType == OPERATOR_EXCLAMATION){
+	else if(tokenType == OPERATOR_EXCLAMATION){
 		actToken = scannerpointer->nextToken();
 		tokenType = actToken->getType();
-		exp2();
+		exp2Node.nodeArray[0] = exp2();
 	}
 
 	else{
+		failBit = FAIL;
 		cout << "Fehler nahe " << actToken->getRow() << " , " << actToken->getCol() << endl;
 		cout << actToken -> getContainer() -> getValue() << endl;
 	}
+	return exp2Node;
 }
 
-void Syntax_Check::index(){
+TreeNode Syntax_Check::index(){
+	TreeNode indexNode;
+
 	if(tokenType == OPERATOR_SQUERED_OPEN){
+		indexNode = new TreeNode(INDEX);
 		actToken = scannerpointer->nextToken();
 		tokenType = actToken->getType();
-		exp();
+		indexNode.nodeArray[0] = exp();
 		if(tokenType == OPERATOR_SQUERED_CLOSED){
 			actToken = scannerpointer->nextToken();
 			tokenType = actToken->getType();
 		}else{
+			failBit = FAIL;
 			cout << "Fehler nahe " << actToken->getRow() << " , " << actToken->getCol() << endl;
     		cout << actToken -> getContainer() -> getValue() << endl;
 		}
 	}
+	else{
+		indexNode = new TreeNode(INDEX_EPS);
+	}
+
+	return indexNode;
 }
 
-void Syntax_Check::op_exp(){
+TreeNode Syntax_Check::op_exp(){
+	TreeNode op_expNode;
 	if(tokenType == OPERATOR_PLUS || tokenType == OPERATOR_MINUS || tokenType == OPERATOR_STAR ||
 			tokenType == OPERATOR_SLASH || tokenType == OPERATOR_LESSTHAN ||
 			tokenType == OPERATOR_MORETHAN || tokenType == OPERATOR_EQUAL ||tokenType == OPERATOR_UNEQUAL ||
 			tokenType == OPERATOR_AMPERSAND){
-		op();
-		exp();
+		op_expNode = new TreeNode(OP_EXP);
+		op_expNode.nodeArray[0] = op();
+		op_expNode.nodeArray[1] = exp();
 	}
+	else{
+		op_expNode = new TreeNode(OP_EXP_EPS);
+	}
+
+	return op_expNode;
 }
 
-void Syntax_Check::op(){
+TreeNode Syntax_Check::op(){
+	TreeNode opNode = new TreeNode(OP);
 	if(tokenType == OPERATOR_PLUS){
 		actToken = scannerpointer->nextToken();
 		tokenType = actToken->getType();
@@ -357,9 +436,11 @@ void Syntax_Check::op(){
 		tokenType = actToken->getType();
 	}
 	else{
+		failBit = FAIL;
 		cout << "Fehler nahe " << actToken->getRow() << " , " << actToken->getCol() << endl;
 		cout << actToken -> getContainer() -> getValue() << endl;
 	}
+	return opNode;
 }
 
 

@@ -341,6 +341,8 @@ State States::StateSTAR2(char c) {
 
 	if (c == '/') {
 		return COMMENT2;
+	}else if(c == '*'){
+	    return STAR2;
 	}
 	else {
 		return COMM;
