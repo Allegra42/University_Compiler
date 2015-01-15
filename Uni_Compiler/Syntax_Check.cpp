@@ -462,40 +462,49 @@ TreeNode* Syntax_Check::op_exp(){
 }
 
 TreeNode* Syntax_Check::op(){
-	TreeNode* opNode = new TreeNode(OP);
+	TreeNode* opNode;
 	if(tokenType == OPERATOR_PLUS){
+		opNode = new TreeNode(OP_ADD);
 		actToken = scannerpointer->nextToken();
 		tokenType = actToken->getType();
 	}
 	else if(tokenType == OPERATOR_MINUS){
+		opNode = new TreeNode(OP_SUB);
 		actToken = scannerpointer->nextToken();
 		tokenType = actToken->getType();
 	}
 	else if(tokenType == OPERATOR_STAR){
+		opNode = new TreeNode(OP_MUL);
 		actToken = scannerpointer->nextToken();
 		tokenType = actToken->getType();
 	}
 	else if(tokenType == OPERATOR_SLASH){
+		opNode = new TreeNode(OP_DIVI);
 		actToken = scannerpointer->nextToken();
 		tokenType = actToken->getType();
 	}
 	else if(tokenType == OPERATOR_LESSTHAN){
+		opNode = new TreeNode(OP_LES);
 		actToken = scannerpointer->nextToken();
 		tokenType = actToken->getType();
 	}
 	else if(tokenType == OPERATOR_MORETHAN){
+		opNode = new TreeNode(OP_MOR);
 		actToken = scannerpointer->nextToken();
 		tokenType = actToken->getType();
 	}
 	else if(tokenType == OPERATOR_EQUAL){
+		opNode = new TreeNode(OP_EQU);
 		actToken = scannerpointer->nextToken();
 		tokenType = actToken->getType();
 	}
 	else if(tokenType == OPERATOR_UNEQUAL){
+		opNode = new TreeNode(OP_UNEQ);
 		actToken = scannerpointer->nextToken();
 		tokenType = actToken->getType();
 	}
 	else if(tokenType == OPERATOR_AMPERSAND){
+		opNode = new TreeNode(OP_AMPAND);
 		actToken = scannerpointer->nextToken();
 		tokenType = actToken->getType();
 	}
