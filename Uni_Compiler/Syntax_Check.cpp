@@ -346,9 +346,10 @@ TreeNode* Syntax_Check::exp(){
 }
 
 TreeNode* Syntax_Check::exp2(){
-	TreeNode* exp2Node = new TreeNode(EXP2);
+	TreeNode* exp2Node;
 
 	if(tokenType == OPERATOR_BR_OPEN){
+		exp2Node = new TreeNode(EXP2_BRACK);
 		actToken = scannerpointer->nextToken();
 		tokenType = actToken->getType();
 		exp2Node->nodeArray[0] = exp();
@@ -365,7 +366,7 @@ TreeNode* Syntax_Check::exp2(){
 
 
 	else if(tokenType == STRING){
-	
+		exp2Node = new TreeNode(EXP2_IDENTIFIER);
 	    ParserLeafe* leafe = new ParserLeafe(actToken -> getContainer());
 	    exp2Node -> nodeArray[0] = leafe;
 	
@@ -376,7 +377,7 @@ TreeNode* Syntax_Check::exp2(){
 
 
 	else if(tokenType == NUMBER){
-	
+		exp2Node = new TreeNode(EXP2_INT);
 	    ParserLeafe* leafe = new ParserLeafe(actToken -> getContainer());
 	    exp2Node -> nodeArray[0] = leafe;
 	
@@ -386,6 +387,7 @@ TreeNode* Syntax_Check::exp2(){
 
 
 	else if(tokenType == OPERATOR_MINUS){
+		exp2Node = new TreeNode(EXP2_MINUS);
 		actToken = scannerpointer->nextToken();
 		tokenType = actToken->getType();
 		exp2Node->nodeArray[0] = exp2();
@@ -393,6 +395,7 @@ TreeNode* Syntax_Check::exp2(){
 
 
 	else if(tokenType == OPERATOR_EXCLAMATION){
+		exp2Node = new TreeNode(EXP2_NOT);
 		actToken = scannerpointer->nextToken();
 		tokenType = actToken->getType();
 		exp2Node->nodeArray[0] = exp2();
