@@ -3,7 +3,8 @@
 
 #include "scanner.h"
 #include "token.h"
-#include "Node.h"
+#include "ParserTree.h"
+#include "parserLeafe.h"
 
 using namespace std;
 
@@ -20,19 +21,19 @@ public:
 private:
 	Scanner* scannerpointer;
 	void prog();
-	TreeNode decls();
-	TreeNode decl();
-	TreeNode array();
-	TreeNode statements();
-	TreeNode statement();
-	TreeNode exp();
-	TreeNode exp2();
-	TreeNode index();
-	TreeNode op_exp();
-	TreeNode op();
+	TreeNode* decls();
+	TreeNode* decl();
+	TreeNode* array();
+	TreeNode* statements();
+	TreeNode* statement();
+	TreeNode* exp();
+	TreeNode* exp2();
+	TreeNode* index();
+	TreeNode* op_exp();
+	TreeNode* op();
 	Token* actToken;
 	State tokenType;
-	TreeNode rootNode;
+	TreeNode* rootNode;
 	FailureBit failBit;
 
 

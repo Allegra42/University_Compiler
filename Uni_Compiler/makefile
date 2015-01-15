@@ -1,4 +1,7 @@
 
+clean:
+	rm *.o
+
 ## when just wanted to have a single scanner ##
 token.o: token.h token.cpp
 	g++ -c -g -o token.o token.cpp
@@ -23,12 +26,22 @@ scanner.o: scanner.cpp scanner.h
 
 syntax_c.o: Syntax_Check.h Syntax_Check.cpp
 	g++ -c -g -o syntax_c.o Syntax_Check.cpp
+	
+parserTree.o: ParserTree.h ParserTree.cpp superTreeNode.o
+	g++ -c -g -o parserTree.o ParserTree.cpp
+	
+superTreeNode.o: superTreeNode.cpp superTreeNode.h
+	g++ -c -g -o superTreeNode.o superTreeNode.cpp
+	
+parserLeafe.o: parserLeafe.h parserLeafe.cpp superTreeNode.o
+	g++ -c -g -o parserLeafe.o parserLeafe.cpp
+	
 
-scanner:	       buffer.o automat.o scanner.o token.o hashmap.o container.o node.h linkedlist.h genericStorage.h states.o
-	g++ -o scanner buffer.o automat.o scanner.o token.o hashmap.o container.o node.h linkedlist.h genericStorage.h states.o
+scanner:	       buffer.o automat.o scanner.o token.o hashmap.o container.o listnode.h linkedlist.h states.o
+	g++ -o scanner buffer.o automat.o scanner.o token.o hashmap.o container.o listnode.h linkedlist.h states.o
 
-parser: syntax_c.o buffer.o automat.o scanner.o token.o hashmap.o container.o node.h linkedlist.h genericStorage.h states.o
-	g++ -o parser token.o syntax_c.o buffer.o automat.o scanner.o hashmap.o container.o node.h linkedlist.h genericStorage.h states.o
+parser: syntax_c.o buffer.o automat.o scanner.o token.o hashmap.o container.o listnode.h linkedlist.h states.o parserLeafe.o parserTree.o superTreeNode.o
+	g++ -o parser token.o syntax_c.o buffer.o automat.o scanner.o hashmap.o container.o listnode.h linkedlist.h states.o parserLeafe.o parserTree.o superTreeNode.o
 
 ## shared lib stuff ##
 

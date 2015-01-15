@@ -6,7 +6,6 @@
 #include "token.h"
 #include "container.h"
 #include "Automat.h"
-#include "genericStorage.h"
 
 #include <string.h>
 #include <stdio.h>

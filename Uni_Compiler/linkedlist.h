@@ -3,7 +3,7 @@
 #define __linkedListHeader__
 
 
-#include "node.h"
+#include "listnode.h"
 using namespace std;
 
 
