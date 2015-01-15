@@ -39,7 +39,7 @@ TreeNode* Syntax_Check::decls(){
 	if(tokenType == IDENTIFIER_INT){
 		declsNode = new TreeNode(DECLS);
 		declsNode->nodeArray[0] = decl();
-		declsNode -> makeCode(DECLS);
+		//declsNode -> makeCode(DECLS);
 			if(tokenType == OPERATOR_SEMICOL){
 				actToken = scannerpointer->nextToken();
 				tokenType = actToken->getType();
@@ -156,12 +156,12 @@ TreeNode* Syntax_Check::statements(){
 
 TreeNode* Syntax_Check::statement(){
 
-	TreeNode* statementNode = new TreeNode(STATEMENT);
+	TreeNode* statementNode;
 	switch(tokenType){
 
 
 	case STRING:{
-	
+		statementNode = new TreeNode(STATEMENT_IDENTIFIER);
 	    ParserLeafe* leafe = new ParserLeafe(actToken -> getContainer());
 	    statementNode -> nodeArray[0] = leafe;
 	
@@ -182,6 +182,7 @@ TreeNode* Syntax_Check::statement(){
 
 
 	case IDENTIFIER_WRITE:{
+		statementNode = new TreeNode(STATEMENT_WRITE);
 		actToken = scannerpointer->nextToken();
 		tokenType = actToken->getType();
 		if(tokenType == OPERATOR_BR_OPEN){
@@ -207,6 +208,7 @@ TreeNode* Syntax_Check::statement(){
 
 
 	case IDENTIFIER_READ:{
+		statementNode = new TreeNode(STATEMENT_READ);
 		actToken = scannerpointer->nextToken();
 		tokenType = actToken->getType();
 		if(tokenType == OPERATOR_BR_OPEN){
@@ -247,6 +249,7 @@ TreeNode* Syntax_Check::statement(){
 
 
 	case OPERATOR_CUREVED_OPEN:{
+		statementNode = new TreeNode(STATEMENT_CURVED);
 		actToken = scannerpointer->nextToken();
 		tokenType = actToken->getType();
 		statementNode->nodeArray[0] = statements();
@@ -264,6 +267,7 @@ TreeNode* Syntax_Check::statement(){
 
 
 	case IDENTIFIER_IF:{
+		statementNode = new TreeNode(STATEMENT_IF);
 		actToken = scannerpointer->nextToken();
 		tokenType = actToken->getType();
 		if(tokenType == OPERATOR_BR_OPEN){
@@ -302,6 +306,7 @@ TreeNode* Syntax_Check::statement(){
 
 
 	case IDENTIFIER_WHILE:{
+		statementNode = new TreeNode(STATEMENT_WHILE);
 		actToken = scannerpointer->nextToken();
 		tokenType = actToken->getType();
 		if(tokenType == OPERATOR_BR_OPEN){
