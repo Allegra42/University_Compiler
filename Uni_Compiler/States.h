@@ -20,7 +20,6 @@ public:
     	counterToLastEndState = 0;
     	commentLinesCounter = 0;
     	rowCounter = 0;
-    	cout << "Object created" << endl ;
     }
     
     ~States(){

@@ -102,7 +102,7 @@ void Buffer::resetBy(int step){
  * Initialisiert den Buffer:
  */
 void Buffer::init(){
-	cout << "### init buffer..." << endl;
+//	cout << "### init buffer..." << endl;
 
 	int test = posix_memalign(&double_pointer, alignsize, memsize); 	//Speicherplatz Teil 1 anlegen.
 	if(test != 0){

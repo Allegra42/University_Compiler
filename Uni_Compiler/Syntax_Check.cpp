@@ -10,6 +10,15 @@
 
 using namespace std;
 
+/**
+ * Syntax_Check nimmt einen Quelltext entgegen, führt diesen dem
+ * Scanner zu, der diesen einließt, sinnvolle Tokens bildet und diese
+ * über eine Hashmap verwaltet; danach wird die Eingabe syntaktisch
+ * geprüft und aus einem korrekten Ergebnis ein ParseTree gebildet.
+ * Nur ein korrekter ParseTree wird typisiert, um danach
+ * die Codeerzeugung darauf aufzurufen.
+ * @param sourcefile Übergebener Quelltext, möglichst in der vorgegebenen Sprache
+ */
 Syntax_Check::Syntax_Check(char* sourcefile){
 
 	scannerpointer = new Scanner(sourcefile);
@@ -19,14 +28,33 @@ Syntax_Check::Syntax_Check(char* sourcefile){
 	tokenType = actToken->getType();
 	rootNode = new TreeNode(PROG);
 	this -> prog();
+	
+	if(failBit == CORRECT){
+	    // TODO failBit setzen im Check
+	    rootNode -> typeCheck(rootNode);
+	}
+	
+	if(failBit == CORRECT){
+	   rootNode -> makeCode(rootNode);
+	}
+	
 }
 
+/**
+ * Destruktor, gibt Ressourcen wieder frei
+ */
 Syntax_Check::~Syntax_Check(){
 
 	delete scannerpointer;
 	scannerpointer = 0;
 }
 
+/**
+ * Prog ist Startpunkt für die Syntaxüberprüfung und den Aufbau
+ * des ParseTrees. Daraus wird rekursiv nach den Regeln des Skripts -> siehe Skript
+ * ein Baum anhand des Quelltextes aufgebaut.
+ * Teilt die Syntax in Deklarationen und Anweisungen
+ */
 void Syntax_Check::prog(){
 	rootNode->nodeArray[0] = decls();
 	if(failBit == CORRECT){
@@ -34,6 +62,10 @@ void Syntax_Check::prog(){
 	}
 }
 
+/**
+ * Decls ist Startpunkt für die weitere Überprüfung und Aufbau des
+ * Deklarationenteil des Baumes.
+ */
 TreeNode* Syntax_Check::decls(){
 	TreeNode* declsNode=0;
 	if(tokenType == IDENTIFIER_INT){
@@ -61,17 +93,23 @@ TreeNode* Syntax_Check::decls(){
 	return declsNode;
 }
 
+/**
+ * Decl gibt die Syntax für Überprüfung und Aufbau
+ * einer Deklaration vor.
+ */
 TreeNode* Syntax_Check::decl(){
 	TreeNode* declNode = new TreeNode(DECL);
 	if(tokenType == IDENTIFIER_INT){
 		actToken = scannerpointer->nextToken();
 		tokenType = actToken->getType();
+		
 		declNode->nodeArray[0] = array();
+		
 		if(tokenType == STRING){
 		
 		    ParserLeafe* leafe = new ParserLeafe(actToken -> getContainer());
 		    declNode -> nodeArray[1] = leafe;
-		
+		    
 			actToken = scannerpointer->nextToken();
 			tokenType = actToken->getType();
 		}
@@ -89,6 +127,9 @@ TreeNode* Syntax_Check::decl(){
 	return declNode;
 }
 
+/**
+ * Array gibt die Syntax und Aufbau von der Array-Deklaration vor.
+ */
 TreeNode* Syntax_Check::array(){
 	TreeNode* arrayNode=0;
 	if(tokenType == OPERATOR_SQUERED_OPEN){
@@ -130,30 +171,40 @@ TreeNode* Syntax_Check::array(){
 	return arrayNode;
 }
 
+/**
+ * Statments ist Startpunkt für Syntax und Aufbau des Anweisungsteil des ParseTree
+ */
 TreeNode* Syntax_Check::statements(){
 	TreeNode* statementsNode=0;
 	if(tokenType == STRING || tokenType == IDENTIFIER_WRITE || tokenType == IDENTIFIER_READ
 			|| tokenType == OPERATOR_CUREVED_OPEN || tokenType == IDENTIFIER_IF || tokenType == IDENTIFIER_WHILE){
 		statementsNode = new TreeNode(STATEMENTS);
 		statementsNode->nodeArray[0] = statement();
-			cout  << "done" << endl;
+//			cout  << "done" << endl;
 			if(tokenType == OPERATOR_SEMICOL){
 				actToken = scannerpointer->nextToken();
 				tokenType = actToken->getType();
 				statementsNode->nodeArray[1] = statements();
+			}else{
+			    failBit = FAIL;
+				cout << "Fehler nahe " << actToken->getRow() << " , " << actToken->getCol() << endl;
+			    cout << actToken -> getContainer() -> getValue() << endl;
 			}
 	}
-	else if (tokenType == EOF2){
+	else if (tokenType == EOF2 || tokenType == OPERATOR_CURVED_CLOSED){
 		statementsNode = new TreeNode(STATEMENTS_EPS);
 	}
 	else{
 		failBit = FAIL;
-					cout << "Fehler nahe " << actToken->getRow() << " , " << actToken->getCol() << endl;
-			        cout << actToken -> getContainer() -> getValue() << endl;
+	    cout << "Fehler nahe " << actToken->getRow() << " , " << actToken->getCol() << endl;
+        cout << actToken -> getContainer() -> getValue() << endl;
 	}
 	return statementsNode;
 }
 
+/**
+ * Statement gibt Syntax und Aufbau von Anweisungen vor
+ */
 TreeNode* Syntax_Check::statement(){
 
 	TreeNode* statementNode;
@@ -336,6 +387,9 @@ TreeNode* Syntax_Check::statement(){
 	return statementNode;
 }
 
+/**
+ * Exp gibt Syntax und Aufbau von Ausdrücken vor
+ */
 TreeNode* Syntax_Check::exp(){
 	TreeNode* expNode = new TreeNode(EXP);
 
@@ -345,8 +399,11 @@ TreeNode* Syntax_Check::exp(){
 	return expNode;
 }
 
+/**
+ * Exp2 gibt die genaue Syntax und Aufbau eines Ausdrucks vor
+ */
 TreeNode* Syntax_Check::exp2(){
-	TreeNode* exp2Node;
+	TreeNode* exp2Node=0;
 
 	if(tokenType == OPERATOR_BR_OPEN){
 		exp2Node = new TreeNode(EXP2_BRACK);
@@ -367,9 +424,12 @@ TreeNode* Syntax_Check::exp2(){
 
 	else if(tokenType == STRING){
 		exp2Node = new TreeNode(EXP2_IDENTIFIER);
+		
 	    ParserLeafe* leafe = new ParserLeafe(actToken -> getContainer());
 	    exp2Node -> nodeArray[0] = leafe;
-	
+	    
+//	    cout << "### " << exp2Node -> nodeArray[0] -> getContainer() -> getValue() << endl;
+	    
 		actToken = scannerpointer->nextToken();
 		tokenType = actToken->getType();
 		exp2Node->nodeArray[1] = index();
@@ -409,6 +469,9 @@ TreeNode* Syntax_Check::exp2(){
 	return exp2Node;
 }
 
+/**
+ * Index gibt Syntax und Aufbau eines Indexes vor
+ */
 TreeNode* Syntax_Check::index(){
 	TreeNode* indexNode;
 
@@ -422,28 +485,30 @@ TreeNode* Syntax_Check::index(){
 			tokenType = actToken->getType();
 		}else{
 			failBit = FAIL;
-			cout << "Fehler nahe " << actToken->getRow() << " , " << actToken->getCol() << endl;
+			cout << "Fehler nahe " << actToken->getRow() << " , k1" << actToken->getCol() << endl;
     		cout << actToken -> getContainer() -> getValue() << endl;
 		}
 	}
-	else if(tokenType == OPERATOR_DEFINITION || tokenType == OPERATOR_BR_CLOSE){
+	else if(tokenType == OPERATOR_DEFINITION || tokenType == OPERATOR_BR_CLOSE || isOperator() || OPERATOR_SEMICOL){ // TODO Discuss
 		indexNode = new TreeNode(INDEX_EPS);
 	}
 	else{
 		failBit = FAIL;
-					cout << "Fehler nahe " << actToken->getRow() << " , " << actToken->getCol() << endl;
+					cout << "Fehler nahe " << actToken->getRow() << " , k2" << actToken->getCol() << endl;
 			        cout << actToken -> getContainer() -> getValue() << endl;
 	}
 
 	return indexNode;
 }
 
+/**
+ * Op_Exp gibt Syntax und Aufbau von der Kombination Operator gefolgt
+ * von einem Ausdruck vor.
+ */
 TreeNode* Syntax_Check::op_exp(){
 	TreeNode* op_expNode=0;
-	if(tokenType == OPERATOR_PLUS || tokenType == OPERATOR_MINUS || tokenType == OPERATOR_STAR ||
-			tokenType == OPERATOR_SLASH || tokenType == OPERATOR_LESSTHAN ||
-			tokenType == OPERATOR_MORETHAN || tokenType == OPERATOR_EQUAL ||tokenType == OPERATOR_UNEQUAL ||
-			tokenType == OPERATOR_AMPERSAND){
+	
+	if(isOperator()){
 		op_expNode = new TreeNode(OP_EXP);
 		op_expNode->nodeArray[0] = op();
 		op_expNode->nodeArray[1] = exp();
@@ -461,7 +526,11 @@ TreeNode* Syntax_Check::op_exp(){
 	return op_expNode;
 }
 
+/**
+ * Op gibt Syntax und Baumaufbau von Operatoren vor
+ */
 TreeNode* Syntax_Check::op(){
+
 	TreeNode* opNode;
 	if(tokenType == OPERATOR_PLUS){
 		opNode = new TreeNode(OP_ADD);
@@ -516,13 +585,23 @@ TreeNode* Syntax_Check::op(){
 	return opNode;
 }
 
+/*
+ * Prüft, ob das Token ein Operator ist.
+ */
+bool Syntax_Check::isOperator(){
 
+    return tokenType == OPERATOR_PLUS || tokenType == OPERATOR_MINUS || tokenType == OPERATOR_STAR ||
+			tokenType == OPERATOR_SLASH || tokenType == OPERATOR_LESSTHAN ||
+			tokenType == OPERATOR_MORETHAN || tokenType == OPERATOR_EQUAL ||tokenType == OPERATOR_UNEQUAL ||
+			tokenType == OPERATOR_AMPERSAND;
+
+}
 
 
 int main(int argc,char* argv[]){
-    cout << "start parser" << endl;
+//    cout << "start parser" << endl;
 	Syntax_Check* syncheck = new Syntax_Check(argv[1]);
-	cout << "end parser" << endl;
+//	cout << "end parser" << endl;
 }
 
 

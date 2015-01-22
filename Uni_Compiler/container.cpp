@@ -44,4 +44,14 @@ long int Container::getNumber(){
     return number;
 }
 
+// gibt des Typ des Identifiers zurück
+NodeType Container::getNodeType(){
+    return nodeType;
+}
+
+// setzt den Typ des identifiers
+void Container::setNodeType(NodeType type){
+    this -> nodeType = type;
+}
+
 #endif

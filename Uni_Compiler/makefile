@@ -18,7 +18,7 @@ states.o: States.cpp States.h
 automat.o: Automat.cpp Automat.h
 	g++ -c -g -o automat.o Automat.cpp
 
-container.o: container.cpp container.h
+container.o: container.cpp container.h nodeTypes.h
 	g++ -c -g -o container.o container.cpp
 
 scanner.o: scanner.cpp scanner.h 
@@ -27,15 +27,17 @@ scanner.o: scanner.cpp scanner.h
 syntax_c.o: Syntax_Check.h Syntax_Check.cpp
 	g++ -c -g -o syntax_c.o Syntax_Check.cpp
 	
-parserTree.o: ParserTree.h ParserTree.cpp superTreeNode.o
+parserTree.o: ParserTree.h ParserTree.cpp superTreeNode.o nodeTypes.h
 	g++ -c -g -o parserTree.o ParserTree.cpp
 	
-superTreeNode.o: superTreeNode.cpp superTreeNode.h
+superTreeNode.o: superTreeNode.cpp superTreeNode.h nodeTypes.h
 	g++ -c -g -o superTreeNode.o superTreeNode.cpp
 	
-parserLeafe.o: parserLeafe.h parserLeafe.cpp superTreeNode.o
+parserLeafe.o: parserLeafe.h parserLeafe.cpp superTreeNode.o nodeTypes.h
 	g++ -c -g -o parserLeafe.o parserLeafe.cpp
 	
+all:
+	make clean;make parser
 
 scanner:	       buffer.o automat.o scanner.o token.o hashmap.o container.o listnode.h linkedlist.h states.o
 	g++ -o scanner buffer.o automat.o scanner.o token.o hashmap.o container.o listnode.h linkedlist.h states.o

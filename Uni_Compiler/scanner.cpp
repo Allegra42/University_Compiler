@@ -120,7 +120,7 @@ Token* Scanner::nextToken(){
     
     }
     
-    cout << "TOKEN: "<< automat -> enumToString( tokenReference-> getContainer() ->getType() ) << ":" << tokenReference -> getRow() << "/" << tokenReference -> getCol()<< endl;
+//    cout << "TOKEN: "<< automat -> enumToString( tokenReference-> getContainer() ->getType() ) << ":" << tokenReference -> getRow() << "/" << tokenReference -> getCol()<< endl;
     
     return tokenReference;
 
@@ -155,16 +155,11 @@ Container* Scanner::createContainer(char* word,State state){
 
 // Konstruktor initialisiert den Scanner
 Scanner::Scanner(char* filepath){
-    cout << "INIT" << endl;
-    
     automat=new Automat();
     buffer=new Buffer(filepath);
 
     this -> init();
     
-    cout << "END INIT" << endl;
-    
-//    cout << automat -> enumToString(hashMap -> get("if")->getType()) << endl;
 }
 
 Scanner::~Scanner(){

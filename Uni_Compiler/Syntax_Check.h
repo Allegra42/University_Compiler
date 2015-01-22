@@ -35,6 +35,7 @@ private:
 	State tokenType;
 	TreeNode* rootNode;
 	FailureBit failBit;
+	bool isOperator();
 
 
 };
